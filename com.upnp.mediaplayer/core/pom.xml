@@ -17,6 +17,60 @@
   <!-- More Project Information -->
   <name>MediaPlayer Core</name>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>appassembler-maven-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>assemble</goal>
+                                <goal>create-repository</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <repositoryLayout>flat</repositoryLayout>
+                        <useWildcardClassPath>true</useWildcardClassPath>
+                        <programs>
+                            <program>
+                                <platforms>
+                                    <platform>unix</platform>
+                                    <platform>windows</platform>
+                                </platforms>
+                                <mainClass>org.rpi.main.StartMe</mainClass>
+                                <id>run</id>
+                            </program>
+                        </programs>
+                    </configuration>
+                </plugin>
+
+
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <descriptors>
+                            <descriptor>src/main/assembly/bin.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
   <dependencies>
     <dependency>
       <groupId>log4j</groupId>

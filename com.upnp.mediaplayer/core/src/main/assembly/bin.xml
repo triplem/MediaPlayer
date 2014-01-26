@@ -1,0 +1,53 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>bin</id>
+
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/appassembler/repo</directory>
+            <outputDirectory>mediaplayer_lib</outputDirectory>
+            <excludes>
+                <exclude>maven-metadata-appassembler.xml</exclude>
+                <exclude>mediaplayer*.jar</exclude>
+            </excludes>
+        </fileSet>
+<!--
+        <fileSet>
+            <directory>target/appassembler/repo</directory>
+            <outputDirectory>.</outputDirectory>
+            <excludes>
+                <exclude>maven-metadata-appassembler.xml</exclude>
+            </excludes>
+            <includes>
+                <include>mediaplayer*.jar</include>
+            </includes>
+        </fileSet>
+-->
+        <fileSet>
+            <directory>src/main/assembly/application</directory>
+            <outputDirectory>.</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/assembly/linux</directory>
+            <outputDirectory>mediaplayer_lib/ohNet/linux</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/assembly/windows</directory>
+            <outputDirectory>mediaplayer_lib/ohNet/windows</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>target/appassembler/repo/mediaplayer-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>mediaplayer.jar</destName>
+        </file>
+    </files>
+</assembly>
