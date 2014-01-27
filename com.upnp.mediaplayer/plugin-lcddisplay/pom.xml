@@ -17,7 +17,28 @@
   <!-- More Project Information -->
   <name>MediaPlayer Plugin LCDDisplay</name>
 
-  <dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/jar.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
       <dependency>
           <groupId>org.rpi</groupId>
           <artifactId>mediaplayer</artifactId>
