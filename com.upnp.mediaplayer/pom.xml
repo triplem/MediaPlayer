@@ -4,7 +4,7 @@
   <!-- The Basics -->
   <groupId>org.rpi</groupId>
   <artifactId>mediaplayer-master</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- More Project Information -->
@@ -62,7 +62,7 @@
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <autoVersionSubmodules>false</autoVersionSubmodules>
                     </configuration>
                 </plugin>
             </plugins>
