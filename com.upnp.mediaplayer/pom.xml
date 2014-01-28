@@ -43,8 +43,9 @@
     <distributionManagement>
         <repository>
             <id>bintray</id>
-            <url>https://api.bintray.com/maven/MediaPlayer/mediaplayer</url>
-        </repository>
+            <name>bintray</name>
+            <url>https://api.bintray.com/maven/triplem/MediaPlayer/mediaplayer</url>
+       </repository>
     </distributionManagement>
 
     <build>
