@@ -8,7 +8,8 @@
   <parent>
     <groupId>org.rpi</groupId>
     <artifactId>mediaplayer-master</artifactId>
-    <version>0.0.1</version>
+      <version>0.0.1-SNAPSHOT</version>
+
   </parent>
 
   <artifactId>CustomInputSource</artifactId>
