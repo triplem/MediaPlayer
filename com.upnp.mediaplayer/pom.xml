@@ -39,9 +39,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray</id>
-            <name>bintray</name>
-            <url>https://api.bintray.com/maven/triplem/MediaPlayer/mediaplayer</url>
+            <id>pacnas</id>
+            <name>pacnas</name>
+            <url>scp://build.pacnas.org/srv/http/mediaplayer</url>
        </repository>
     </distributionManagement>
 
