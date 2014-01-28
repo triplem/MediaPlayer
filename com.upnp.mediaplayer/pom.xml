@@ -31,12 +31,13 @@
 
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/PeteManchester/MediaPlayer/issues</url>
+    <url>https://github.com/triplem/MediaPlayer/issues</url>
   </issueManagement>
   <scm>
-    <connection>scm:git:https://github.com/PeteManchester/MediaPlayer.git</connection>
-    <developerConnection>scm:git:git@github.com:PeteManchester/MediaPlayer.git</developerConnection>
-    <url>https://github.com/PeteManchester/MediaPlayer</url>
+    <connection>scm:git:https://github.com/triplem/MediaPlayer.git</connection>
+    <developerConnection>scm:git:git@github.com:triplem/MediaPlayer.git</developerConnection>
+    <url>https://github.com/triplem/MediaPlayer</url>
+    <tag>HEAD</tag>
   </scm>
 
     <build>
@@ -50,9 +51,52 @@
                         <target>1.7</target>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.4.1</version>
+                    <configuration>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>release</releaseProfiles>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
   <repositories>
     <repository>
