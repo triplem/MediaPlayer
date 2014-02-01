@@ -1,4 +1,4 @@
-package de.rpi.plugin.lastfm;
+package org.rpi.plugin.lastfm;
 
 import de.umass.lastfm.Authenticator;
 import de.umass.lastfm.Caller;

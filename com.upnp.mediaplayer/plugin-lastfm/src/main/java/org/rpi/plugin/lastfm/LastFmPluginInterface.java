@@ -1,4 +1,4 @@
-package de.rpi.plugin.lastfm;
+package org.rpi.plugin.lastfm;
 
 
 import net.xeoh.plugins.base.Plugin;
