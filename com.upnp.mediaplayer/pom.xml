@@ -39,13 +39,21 @@
 
     <distributionManagement>
         <repository>
-            <id>pacnas</id>
-            <name>pacnas</name>
-            <url>scp://build.pacnas.org/srv/http/mediaplayer</url>
+            <id>sf.net</id>
+            <name>sf.net</name>
+            <url>scp://frs.sourceforge.net:/home/frs/project/newmediaplayer/</url>
        </repository>
     </distributionManagement>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.6</version>
+            </extension>
+        </extensions>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -118,6 +126,7 @@
     <module>plugin-custominputsource</module>
     <module>plugin-lcddisplay</module>
     <module>plugin-lircintegration</module>
+    <module>plugin-lastfm</module>
   </modules>
 
 </project>

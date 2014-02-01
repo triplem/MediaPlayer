@@ -40,7 +40,7 @@
 
     <files>
         <file>
-            <source>target/appassembler/repo/mediaplayer-${project.version}.jar</source>
+            <source>target/mediaplayer-${project.version}.jar</source>
             <outputDirectory>.</outputDirectory>
             <destName>mediaplayer.jar</destName>
         </file>

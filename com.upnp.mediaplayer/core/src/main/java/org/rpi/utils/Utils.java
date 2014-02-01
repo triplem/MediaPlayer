@@ -83,4 +83,18 @@ public class Utils {
 		return list.toArray(new String[list.size()]);
 	}
 
+    /**
+     * Checks if the given string is empty. Empty means, it is null, has no content or has not length.
+     *
+     * @param string
+     * @return
+     */
+    public static boolean isEmpty(String string) {
+        if (string == null || string.equals("") || string.length() == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

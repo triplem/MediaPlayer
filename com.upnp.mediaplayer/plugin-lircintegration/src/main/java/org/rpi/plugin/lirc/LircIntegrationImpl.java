@@ -1,8 +1,6 @@
 package org.rpi.plugin.lirc;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,118 +16,129 @@ import org.rpi.os.OSManager;
 import org.rpi.player.PlayManager;
 import org.rpi.player.events.EventRequestVolumeDec;
 import org.rpi.player.events.EventRequestVolumeInc;
+import org.rpi.player.events.EventSourceChanged;
 import org.rpi.plugin.input.InputSourcesInterface;
+import org.rpi.plugingateway.PluginGateWay;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 @PluginImplementation
-public class LircIntegrationImpl implements InputSourcesInterface, Observer {
+public class LircIntegrationImpl implements LircIntegrationInterface, Observer {
 
-	Logger log = Logger.getLogger(LircIntegrationImpl.class);
-	ConcurrentHashMap<String, String> commands = new ConcurrentHashMap<String, String>();
+    Logger log = Logger.getLogger(LircIntegrationImpl.class);
+    ConcurrentHashMap<String, LIRCCommand> commands = new ConcurrentHashMap<String, LIRCCommand>();
+    LIRCWorkQueue wq = null;
 
-	public LircIntegrationImpl() {
-		getConfig();
-		PlayManager.getInstance().observVolumeEvents(this);
-	}
+    public LircIntegrationImpl() {
+        log.debug("Starting LircIntegrationImpl");
+        try {
+            wq = new LIRCWorkQueue();
+            wq.start();
+        } catch (Exception e) {
+            log.error("Error: Starting WorkQueue");
+        }
+        getConfig();
 
-	@Override
-	public void update(Observable o, Object event) {
-		if (event instanceof EventRequestVolumeDec) {
-			String command = commands.get("VolumeDec");
-			processEvent(command);
-		} else if (event instanceof EventRequestVolumeInc) {
-			String command = commands.get("VolumeInc");
-			processEvent(command);
-		}
-	}
+        // Register for Volume Events
+        PlayManager.getInstance().observVolumeEvents(this);
+        // Register for Source Events
+        PluginGateWay.getInstance().addObserver(this);
+    }
 
-	private void processEvent(String command) {
-		if(command ==null)
-			return;
-		log.debug("Sending Command: " + command);
-		try
-		{
-		Process pa = Runtime.getRuntime().exec(command);
-		pa.waitFor();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(pa.getInputStream()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-			log.debug("Result of " + command + " : " + line);
-		}
-		reader.close();
-		pa.getInputStream().close();
-		}
-		catch(Exception e)
-		{
-			log.error("Error Sending Command: " + command , e);
-		}
-	}
+    @Override
+    public void update(Observable o, Object event) {
+        if (event instanceof EventRequestVolumeDec) {
+            LIRCCommand command = commands.get("VolumeDec");
+            wq.put(command.getCommand());
+        } else if (event instanceof EventRequestVolumeInc) {
+            LIRCCommand command = commands.get("VolumeInc");
+            wq.put(command.getCommand());
+        } else if (event instanceof EventSourceChanged) {
+            EventSourceChanged es = (EventSourceChanged) event;
+            String name = es.getName();
+            log.debug("Source Changed: " + name);
+            LIRCCommand command = commands.get("SourceChanged@" + name);
+            if (command != null) {
+                wq.put(command.getCommand());
+            } else {
+                log.debug("Could Not Find Command for SourceChanged@" + name);
+            }
+        }
+    }
 
-	/***
-	 *Read the Config file and get the mappings between the Events and commands.
-	 */
-	private void getConfig() {
-		try {
-			String class_name = this.getClass().getName();
-			log.debug("Find Class, ClassName: " + class_name);
-			String path = OSManager.getInstance().getFilePath(this.getClass(), false);
-			log.debug("Getting LIRCConfig.xml from Directory: " + path);
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new File(path + "LIRCConfig.xml"));
-			NodeList mappings = doc.getElementsByTagName("Mapping");
-			int i = 1;
-			for (int s = 0; s < mappings.getLength(); s++) {
-				String event = null;
-				String command = null;
+    /***
+     * Read the Config file and get the mappings between the Events and
+     * commands.
+     */
+    private void getConfig() {
+        try {
+            String class_name = this.getClass().getName();
+            log.debug("Find Class, ClassName: " + class_name);
+            String path = OSManager.getInstance().getFilePath(this.getClass(), false);
+            log.debug("Getting LIRCConfig.xml from Directory: " + path);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new File(path + "LIRCConfig.xml"));
+            NodeList mappings = doc.getElementsByTagName("Mapping");
+            int i = 1;
+            for (int s = 0; s < mappings.getLength(); s++) {
+                String event = null;
+                String command = null;
+                String name = null;
+                Node mapping = mappings.item(s);
+                if (mapping.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) mapping;
+                    event = getElementTest(element, "Event");
+                    command = getElementTest(element, "Command");
+                    name = getElementTest(element, "Name");
+                    String key = event;
+                    if (name != null && !name.equalsIgnoreCase(""))
+                        key += "@" + name;
+                    addToCommands(key, command, name);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error Reading LIRCConfig.xml");
+        }
+    }
 
-				Node mapping = mappings.item(s);
-				if (mapping.getNodeType() == Node.ELEMENT_NODE) {
-					Element element = (Element) mapping;
-					event = getElementTest(element, "Event");
-					command = getElementTest(element, "Command");
-					addToCommands(event, command);
-				}
-			}
-		} catch (Exception e) {
-			log.error("Error Reading LIRCConfig.xml");
-		}
-	}
+    private void addToCommands(String event, String command, String name) {
+        if (!commands.containsKey(event)) {
+            LIRCCommand cmd = new LIRCCommand(command, name);
+            commands.put(event, cmd);
+        }
+    }
 
-	private void addToCommands(String event, String command) {
-		if (!commands.containsKey(event)) {
-			commands.put(event, command);
-		}
-	}
+    /***
+     *
+     * @param element
+     * @param name
+     * @return
+     */
+    private String getElementTest(Element element, String name) {
+        String res = "";
+        NodeList nid = element.getElementsByTagName(name);
+        if (nid != null) {
+            Element fid = (Element) nid.item(0);
+            if (fid != null) {
+                res = fid.getTextContent();
+                // log.debug("ElementName: " + name + " Value: " + res);
+                return res;
 
-	/***
-	 * 
-	 * @param element
-	 * @param name
-	 * @return
-	 */
-	private String getElementTest(Element element, String name) {
-		String res = "";
-		NodeList nid = element.getElementsByTagName(name);
-		if (nid != null) {
-			Element fid = (Element) nid.item(0);
-			if (fid != null) {
-				res = fid.getTextContent();
-				// log.debug("ElementName: " + name + " Value: " + res);
-				return res;
+            }
+        }
+        return res;
+    }
 
-			}
-		}
-		return res;
-	}
-
-	@Shutdown
-	public void bye() {
-		log.debug("ShutDown Called");
-	}
+    @Shutdown
+    public void bye() {
+        log.debug("ShutDown Called");
+        if (wq != null) {
+            wq.clear();
+            wq = null;
+        }
+    }
 
 }

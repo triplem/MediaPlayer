@@ -169,7 +169,7 @@
 	<Channel>
 		<id>Naim Radio</id>
 		<url>http://37.130.228.60:8090/listen.pls</url>
-		<image></image>
+        <image>http://www.naimaudio.com/sites/all/themes/naimaudio/images/statement/logo-white.png</image>
 	</Channel>	
 	
 	<Channel>

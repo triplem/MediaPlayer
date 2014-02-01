@@ -19,7 +19,6 @@
     </properties>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -27,7 +26,7 @@
                     <version>1.7</version>
                     <executions>
                         <execution>
-                            <phase>package</phase>
+                            <phase>prepare-package</phase>
                             <goals>
                                 <goal>assemble</goal>
                                 <goal>create-repository</goal>
@@ -50,6 +49,7 @@
                     </configuration>
                 </plugin>
 
+                <!-- call package:single to pack the whole application -->
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <configuration>
@@ -81,7 +81,6 @@
                     </configuration>
                 </plugin>
             </plugins>
-        </pluginManagement>
     </build>
 
 
