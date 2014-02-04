@@ -6,5 +6,5 @@ build/
 *.ipr
 *.iws
 target/
-.pyc
+*.pyc
 .idea/
