@@ -244,7 +244,7 @@ public class OSManager {
 					log.error("Unable to load Plugins", e);
 				}
 			}
-			log.info("End of LoadPlugnis");
+			log.info("End of LoadPlugins");
 		} catch (Exception e) {
 			log.error("Error Loading Plugins");
 		}
