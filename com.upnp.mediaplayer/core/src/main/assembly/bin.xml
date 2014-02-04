@@ -44,5 +44,9 @@
             <outputDirectory>.</outputDirectory>
             <destName>mediaplayer.jar</destName>
         </file>
+        <file>
+            <source>target/classes/app.properties</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
     </files>
 </assembly>

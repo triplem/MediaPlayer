@@ -1,36 +1,55 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- The Basics -->
-  <parent>
-    <groupId>org.rpi</groupId>
-    <artifactId>mediaplayer-master</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
-  </parent>
+    <!-- The Basics -->
+    <parent>
+        <groupId>org.rpi</groupId>
+        <artifactId>mediaplayer-master</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>LastFM</artifactId>
-  <packaging>jar</packaging>
+    <artifactId>LastFM-plugin</artifactId>
+    <packaging>jar</packaging>
 
-  <!-- More Project Information -->
-  <name>MediaPlayer Plugin LastFM Integration</name>
+    <!-- More Project Information -->
+    <name>MediaPlayer Plugin LastFM Integration</name>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>
-                            src/main/assembly/jar.xml
-                        </descriptor>
-                    </descriptors>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>jar</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <finalName>${artifactId}</finalName>
+                            <descriptors>
+                                <descriptor>
+                                    src/main/assembly/jar.xml
+                                </descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${artifactId}</finalName>
+                            <descriptors>
+                                <descriptor>
+                                    src/main/assembly/zip.xml
+                                </descriptor>
+                            </descriptors>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -39,16 +58,16 @@
 
     <dependencies>
 
-      <dependency>
-          <groupId>org.rpi</groupId>
-          <artifactId>mediaplayer</artifactId>
-          <version>${project.parent.version}</version>
-      </dependency>
+        <dependency>
+            <groupId>org.rpi</groupId>
+            <artifactId>mediaplayer</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>de.u-mass</groupId>
             <artifactId>lastfm-java</artifactId>
             <version>0.1.2</version>
         </dependency>
-  </dependencies>
+    </dependencies>
 </project>

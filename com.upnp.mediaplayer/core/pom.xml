@@ -1,113 +1,134 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- The Basics -->
-  <parent>
-    <groupId>org.rpi</groupId>
-    <artifactId>mediaplayer-master</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
-  </parent>
+    <!-- The Basics -->
+    <parent>
+        <groupId>org.rpi</groupId>
+        <artifactId>mediaplayer-master</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>mediaplayer</artifactId>
-  <packaging>jar</packaging>
+    <artifactId>mediaplayer</artifactId>
+    <packaging>jar</packaging>
 
-  <!-- More Project Information -->
-  <name>MediaPlayer Core</name>
+    <!-- More Project Information -->
+    <name>MediaPlayer Core</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>appassembler-maven-plugin</artifactId>
-                    <version>1.7</version>
-                    <executions>
-                        <execution>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>assemble</goal>
-                                <goal>create-repository</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <repositoryLayout>flat</repositoryLayout>
-                        <useWildcardClassPath>true</useWildcardClassPath>
-                        <programs>
-                            <program>
-                                <platforms>
-                                    <platform>unix</platform>
-                                    <platform>windows</platform>
-                                </platforms>
-                                <mainClass>org.rpi.main.StartMe</mainClass>
-                                <id>run</id>
-                            </program>
-                        </programs>
-                    </configuration>
-                </plugin>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
 
-                <!-- call package:single to pack the whole application -->
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <configuration>
-                        <descriptors>
-                            <descriptor>src/main/assembly/bin.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                            <goal>create-repository</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <useWildcardClassPath>true</useWildcardClassPath>
+                    <programs>
+                        <program>
+                            <platforms>
+                                <platform>unix</platform>
+                                <platform>windows</platform>
+                            </platforms>
+                            <mainClass>org.rpi.main.StartMe</mainClass>
+                            <id>run</id>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>mediaplayer_lib/</classpathPrefix>
-                                <mainClass>org.rpi.main.StartMe</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-            </plugins>
+            <!-- call package:single to pack the whole application -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/bin.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>mediaplayer_lib/</classpathPrefix>
+                            <mainClass>org.rpi.main.StartMe</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>plugins/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 
-  <dependencies>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
 
-    <dependency>
-      <groupId>com.pi4j</groupId>
-      <artifactId>pi4j-core</artifactId>
-      <version>0.0.5</version>
-    </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-core</artifactId>
+            <version>0.0.5</version>
+        </dependency>
 
-<!-- OpenHome, this dependency cannot be found in Maven central right now ;-( -->
-    <dependency>
-      <groupId>org.openhome.net</groupId>
-      <artifactId>ohnet</artifactId>
-      <version>0.9</version>
-    </dependency>
-    <dependency>
-      <groupId>net.xeoh.plugins</groupId>
-      <artifactId>jspf-core</artifactId>
-      <version>1.0.2</version>
-    </dependency>
+        <!-- OpenHome, this dependency cannot be found in Maven central right now ;-( -->
+        <dependency>
+            <groupId>org.openhome.net</groupId>
+            <artifactId>ohnet</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>net.xeoh.plugins</groupId>
+            <artifactId>jspf-core</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 </project>

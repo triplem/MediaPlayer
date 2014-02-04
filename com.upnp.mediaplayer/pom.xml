@@ -1,48 +1,51 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- The Basics -->
-  <groupId>org.rpi</groupId>
-  <artifactId>mediaplayer-master</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
-  <packaging>pom</packaging>
+    <!-- The Basics -->
+    <groupId>org.rpi</groupId>
+    <artifactId>mediaplayer-master</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <!-- More Project Information -->
-  <name>MediaPlayer</name>
-  <description>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a UPNP Renderer.</description>
-  <url>https://github.com/PeteManchester/MediaPlayer</url>
-  <inceptionYear>2013</inceptionYear>
+    <!-- More Project Information -->
+    <name>MediaPlayer</name>
+    <description>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
+        UPNP Renderer.
+    </description>
+    <url>https://github.com/PeteManchester/MediaPlayer</url>
+    <inceptionYear>2013</inceptionYear>
 
-  <developers>
-    <developer>
-      <id>phoyle</id>
-      <name>Peter Hoyle</name>
-    </developer>
-  </developers>
+    <developers>
+        <developer>
+            <id>phoyle</id>
+            <name>Peter Hoyle</name>
+        </developer>
+    </developers>
 
-  <contributors>
-    <contributor>
-      <name>Markus M. May</name>
-    </contributor>
-  </contributors>
+    <contributors>
+        <contributor>
+            <name>Markus M. May</name>
+        </contributor>
+    </contributors>
 
-  <issueManagement>
-    <system>github</system>
-    <url>https://github.com/triplem/MediaPlayer/issues</url>
-  </issueManagement>
-  <scm>
-    <connection>scm:git:https://github.com/triplem/MediaPlayer.git</connection>
-    <developerConnection>scm:git:git@github.com:triplem/MediaPlayer.git</developerConnection>
-    <url>https://github.com/triplem/MediaPlayer</url>
-    <tag>HEAD</tag>
-  </scm>
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/triplem/MediaPlayer/issues</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:https://github.com/triplem/MediaPlayer.git</connection>
+        <developerConnection>scm:git:git@github.com:triplem/MediaPlayer.git</developerConnection>
+        <url>https://github.com/triplem/MediaPlayer</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <repository>
             <id>sf.net</id>
             <name>sf.net</name>
             <url>scp://frs.sourceforge.net:/home/frs/project/newmediaplayer/</url>
-       </repository>
+        </repository>
     </distributionManagement>
 
     <build>
@@ -109,24 +112,63 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>debug</id>
+            <properties>
+                <friendly.name>MediaPlayer (debug)</friendly.name>
+                <log.file.level>debug</log.file.level>
+                <log.console.level>warn</log.console.level>
+            </properties>
+        </profile>
+
     </profiles>
 
-  <repositories>
-    <repository>
-      <id>project.local</id>
-      <name>mediaplayer repository</name>
-      <url>file:${project.basedir}/../repo</url>
-    </repository>
-  </repositories>
+    <repositories>
+        <repository>
+            <id>project.local</id>
+            <name>mediaplayer repository</name>
+            <url>file:${project.basedir}/../repo</url>
+        </repository>
+    </repositories>
 
-  <modules>
-    <module>core</module>
-    <module>plugin-alarmclock</module>
-    <module>plugin-custombutton</module>
-    <module>plugin-custominputsource</module>
-    <module>plugin-lcddisplay</module>
-    <module>plugin-lircintegration</module>
-    <module>plugin-lastfm</module>
-  </modules>
+    <modules>
+        <module>core</module>
+        <module>plugin-alarmclock</module>
+        <module>plugin-custombutton</module>
+        <module>plugin-custominputsource</module>
+        <module>plugin-lcddisplay</module>
+        <module>plugin-lircintegration</module>
+        <module>plugin-lastfm</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
+        <friendly.name>MediaPlayer (Made in Manchester)</friendly.name>
+        <player>mpd</player>
+
+        <playlist.max>1000</playlist.max>
+        <save.local.playlist>true</save.local.playlist>
+        <enableAVTransport>true</enableAVTransport>
+        <enableReceiver>false</enableReceiver>
+
+        <mplayer.playlist>asx,b4s,kpl,m3u,pls,ram,rm,smil,wax,wvx</mplayer.playlist>
+        <mplayer.path>/usr/bin/mplayer</mplayer.path>
+        <mplayer.cache>520</mplayer.cache>
+        <mplayer.cache_min>80</mplayer.cache_min>
+
+        <mpd.host>localhost</mpd.host>
+        <mpd.port>6600</mpd.port>
+        <mpd.preload.timer>3</mpd.preload.timer>
+
+        <log.file>mediaplayer.log</log.file>
+        <log.file.level>error</log.file.level>
+        <log.console.level>off</log.console.level>
+
+        <openhome.debug.level>Error</openhome.debug.level>
+        <openhome.port>52821</openhome.port>
+    </properties>
+
 
 </project>

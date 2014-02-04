@@ -5,10 +5,13 @@ import de.umass.lastfm.Caller;
 import de.umass.lastfm.Session;
 import de.umass.lastfm.Track;
 import de.umass.lastfm.scrobble.ScrobbleResult;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import org.apache.log4j.Logger;
 import org.rpi.os.OSManager;
 import org.rpi.player.PlayManager;
-import org.rpi.player.events.*;
+import org.rpi.player.events.EventBase;
+import org.rpi.player.events.EventTrackChanged;
+import org.rpi.player.events.EventUpdateTrackMetaText;
 import org.rpi.playlist.CustomTrack;
 import org.rpi.utils.Utils;
 
@@ -23,6 +26,7 @@ import java.util.Properties;
 /**
  *
  */
+@PluginImplementation
 public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
 
     private static Logger log = Logger.getLogger(LastFmPluginImpl.class);
@@ -44,6 +48,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
 
     public LastFmPluginImpl() {
         log.info("Init LastFmPluginImpl");
+        log.error("INIT PLUGIN: LASTFM........................");
 
         getConfig();
         init();
@@ -110,7 +115,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         log.debug("Getting lastfm.properties from Directory: " + path);
 
         try {
-            InputStreamReader reader = new FileReader(new File(path, "lastfm.properties"));
+            InputStreamReader reader = new FileReader(new File(path, "org/rpi/plugin/lastfm/lastfm.properties"));
 
             props.load(reader);
 
@@ -128,7 +133,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
             lastfm_proxymode = Proxy.Type.valueOf(proxymode);
 
             lastfm_proxy_ip = props.getProperty("lastfm.proxy.ip");
-            lastfm_proxy_port = Integer.parseInt(props.getProperty("lastfm.proxy.port", ""));
+            lastfm_proxy_port = Integer.parseInt(props.getProperty("lastfm.proxy.port", "-1"));
 
         } catch (FileNotFoundException e) {
             log.error("No properties for lastfm plugin found", e);
@@ -139,7 +144,6 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         }
 
     }
-
 
 
 }

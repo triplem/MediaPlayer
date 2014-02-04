@@ -3,7 +3,7 @@
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
     <!-- TODO: a jarjar format would be better -->
 
-    <id>plugin-jar</id>
+    <id>dist</id>
 
     <formats>
         <format>jar</format>
@@ -22,6 +22,7 @@
                 <exclude>com.pi4j:pi4j-native</exclude>
                 <exclude>com.pi4j:pi4j-core</exclude>
                 <exclude>org.rpi:mediaplayer</exclude>
+                <exclude>log4j:log4j</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
