@@ -86,6 +86,15 @@ public class OSManager {
 			String class_name = this.getClass().getName();
 			log.debug("Find Class, ClassName: " + class_name);
 			String path = getFilePath(this.getClass(), true);
+            path = path + "/";
+            if (path.endsWith("/")) {
+                path = path.substring(0, (path.length() - 2));
+                log.debug("Path ended with '/'. Updated Path to be: " + path);
+            }
+            else {
+                // this should not happen, shouldn't it?
+                log.debug("Path did not end with '/': " + path);
+            }
 			String full_path = path + OHNET_LIB_DIR + "/default";
 			log.debug("Path of this File is: " + path);
 			String os = System.getProperty("os.name").toUpperCase();
