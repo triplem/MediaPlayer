@@ -40,14 +40,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>sf.net</id>
-            <name>sf.net</name>
-            <url>scp://frs.sourceforge.net:/home/frs/project/newmediaplayer/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <extensions>
             <extension>
@@ -76,6 +68,29 @@
                         <autoVersionSubmodules>false</autoVersionSubmodules>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.jfrog.buildinfo</groupId>
+                    <artifactId>artifactory-maven-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <inherited>false</inherited>
+                    <executions>
+                        <execution>
+                            <id>build-info</id>
+                            <goals>
+                                <goal>publish</goal>
+                            </goals>
+                            <configuration>
+                                <publisher>
+                                    <contextUrl>https://oss.jfrog.org</contextUrl>
+                                    <repoKey>libs-releases</repoKey>
+                                    <snapshotRepoKey>libs-snapshots</snapshotRepoKey>
+                                </publisher>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
@@ -123,13 +138,57 @@
 
     </profiles>
 
+    <distributionManagement>
+        <repository>
+            <id>oss-jfrog-artifactory</id>
+            <name>oss-jfrog-artifactory-releases</name>
+            <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>oss-jfrog-artifactory</id>
+            <name>oss-jfrog-artifactory-snapshots</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>libs-releases</id>
+            <name>libs-release-bintray</name>
+            <url>http://repo.jfrog.org/artifactory/libs-release-bintray</url>
+        </repository>
+        <repository>
+            <snapshots />
+            <id>lib-snapshots</id>
+            <name>third-party-snapshots</name>
+            <url>http://repo.jfrog.org/artifactory/third-party-snapshots</url>
+        </repository>
         <repository>
             <id>project.local</id>
             <name>mediaplayer repository</name>
             <url>file:${project.basedir}/../repo</url>
         </repository>
+
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>plugin-releases</id>
+            <name>plugins-releases</name>
+            <url>http://repo.jfrog.org/artifactory/plugins-releases</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots />
+            <id>plugin-snapshots</id>
+            <name>plugins-snapshots</name>
+            <url>http://repo.jfrog.org/artifactory/plugins-snapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <modules>
         <module>core</module>
