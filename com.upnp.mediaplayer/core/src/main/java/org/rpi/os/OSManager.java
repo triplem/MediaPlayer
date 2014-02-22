@@ -8,6 +8,8 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
 import org.rpi.utils.Utils;
 import com.pi4j.io.gpio.GpioController;
@@ -53,10 +55,13 @@ public class OSManager {
 	// }
 
 	/**
+     * Add the library path to the ohNet.so file.
+     *
 	 * Not clever enough to work out how to override ClassLoader functionality,
 	 * so using this nice trick instead..
 	 * 
 	 * @param pathToAdd
+     *
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
@@ -86,79 +91,17 @@ public class OSManager {
 			String class_name = this.getClass().getName();
 			log.debug("Find Class, ClassName: " + class_name);
 			String path = getFilePath(this.getClass(), true);
-            path = path + "/";
+//          path = path + "/";
             if (path.endsWith("/")) {
                 path = path.substring(0, (path.length() - 1));
                 log.debug("Path ended with '/'. Updated Path to be: " + path);
             }
-            else {
-                // this should not happen, shouldn't it?
-                log.debug("Path did not end with '/': " + path);
-            }
-			String full_path = path + OHNET_LIB_DIR + "/default";
-			log.debug("Path of this File is: " + path);
-			String os = System.getProperty("os.name").toUpperCase();
-			log.debug("OS Name: " + os);
-			if (os.startsWith("WINDOWS")) {
-				log.debug("Windows OS");
-				String osPathName = "windows";
-				String osArch = System.getProperty("os.arch");
+//            else {
+//                // this should not happen, shouldn't it?
+//                log.debug("Path did not end with '/': " + path);
+//            }
 
-				String architecture = "x86";
-				if (osArch.endsWith("64")) {
-					architecture = "x64";
-				}
-
-				full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/" + architecture;
-			} else if (os.startsWith("LINUX")) {
-				String osPathName = "linux";
-
-				String arch = System.getProperty("os.arch").toUpperCase();
-				if (arch.startsWith("ARM")) {
-					String osArch = "arm";
-
-					log.debug("Its an ARM device, now check, which revision");
-					try {
-                        String armVersion = getReadElfTag("Tag_CPU_arch");
-
-						if (armVersion == null) {
-                            log.error("Cannot determine ARM version...");
-                            osArch = "UNKNOWN";
-                        } else if (armVersion.equals("v5")) {
-							osArch = osArch + "v5sf";
-						} else if (armVersion.equals("v6")) {
-							// we believe that a v6 arm is always a raspi (could
-							// be a pogoplug...)
-							log.debug("We think this is a Raspi");
-							setRaspi(true);
-							if (isHardFloat()) {
-								osArch = osArch + "v6hf";
-							} else {
-								osArch = osArch + "v6sf";
-							}
-						} else if (armVersion.equals("v7")) {
-							osArch = osArch + "v7";
-						} else {
-                            log.error("Unknown ARM version...(" + armVersion + ")");
-                            osArch = "UNKNOWN";
-                        }
-
-                        if (!osArch.equals("UNKNOWN"))  {
-                            full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/" + osArch;
-                        }
-					} catch (Exception e) {
-						log.debug("Error Determining ARM OS Type: ", e);
-					}
-				} else if (arch.startsWith("I386")) {
-					String version = System.getProperty("os.version");
-					log.debug("OS is Linux, and arch is  " + arch + ". Version is: " + version);
-					full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/x86";
-				} else if (arch.startsWith("AMD64")) {
-					String version = System.getProperty("os.version");
-					log.debug("OS is Linux, and arch is " + arch + ". Version is: " + version);
-					full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/amd64";
-				}
-			}
+            String full_path = path + getOhnetLibDir();
 
 			log.warn("Using full_path " + full_path);
 			addLibraryPath(full_path);
@@ -168,6 +111,75 @@ public class OSManager {
 		}
 
 	}
+
+    public String getOhnetLibDir() {
+        String path_suffix = OHNET_LIB_DIR + "/default";
+        log.debug("Path of this File is: " + path_suffix);
+        String os = System.getProperty("os.name").toUpperCase();
+        log.debug("OS Name: " + os);
+        if (os.startsWith("WINDOWS")) {
+            log.debug("Windows OS");
+            String osPathName = "windows";
+            String osArch = System.getProperty("os.arch");
+
+            String architecture = "x86";
+            if (osArch.endsWith("64")) {
+                architecture = "x64";
+            }
+
+            path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/" + architecture;
+        } else if (os.startsWith("LINUX")) {
+            String osPathName = "linux";
+
+            String arch = System.getProperty("os.arch").toUpperCase();
+            if (arch.startsWith("ARM")) {
+                String osArch = "arm";
+
+                log.debug("Its an ARM device, now check, which revision");
+                try {
+                    String armVersion = getReadElfTag("Tag_CPU_arch");
+
+                    if (armVersion == null) {
+                        log.error("Cannot determine ARM version...");
+                        osArch = "UNKNOWN";
+                    } else if (armVersion.equals("v5")) {
+                        osArch = osArch + "v5sf";
+                    } else if (armVersion.equals("v6")) {
+                        // we believe that a v6 arm is always a raspi (could
+                        // be a pogoplug...)
+                        log.debug("We think this is a Raspi");
+                        setRaspi(true);
+                        if (isHardFloat()) {
+                            osArch = osArch + "v6hf";
+                        } else {
+                            osArch = osArch + "v6sf";
+                        }
+                    } else if (armVersion.equals("v7")) {
+                        osArch = osArch + "v7";
+                    } else {
+                        log.error("Unknown ARM version...(" + armVersion + ")");
+                        osArch = "UNKNOWN";
+                    }
+
+                    if (!osArch.equals("UNKNOWN"))  {
+                        path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/" + osArch;
+                    }
+                } catch (Exception e) {
+                    log.debug("Error Determining ARM OS Type: ", e);
+                }
+            } else if (arch.startsWith("I386")) {
+                String version = System.getProperty("os.version");
+                log.debug("OS is Linux, and arch is  " + arch + ". Version is: " + version);
+                path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/x86";
+            } else if (arch.startsWith("AMD64")) {
+                String version = System.getProperty("os.version");
+                log.debug("OS is Linux, and arch is " + arch + ". Version is: " + version);
+                path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/amd64";
+            }
+        }
+
+        return path_suffix;
+    }
 
 	/***
 	 * Get the Path of this ClassFile and/or the path of the current JAR, which should be basically the same! No?
@@ -185,6 +197,12 @@ public class OSManager {
 //	}
 	
 	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
+        // read core.home environment variable
+        String home = (String)System.getProperties().get("mediaplayer.core.home");
+        if (!Utils.isEmpty(home)) {
+            return home;
+        }
+
 		String className = mClass.getName();
 		if (!className.startsWith("/")) {
 			className = "/" + className;

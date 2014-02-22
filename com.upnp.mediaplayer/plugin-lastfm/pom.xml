@@ -59,10 +59,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.16</version>
                 <configuration>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>../core/src/main/assembly</additionalClasspathElement>
-                    </additionalClasspathElements>
+                    <systemPropertyVariables>
+                        <mediaplayer.core.home>${basedir}/../core/src/main/assembly</mediaplayer.core.home>
+                    </systemPropertyVariables>
                 </configuration>
+
             </plugin>
 
 

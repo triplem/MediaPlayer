@@ -39,7 +39,7 @@ public class StartMe {
 			}
 		}
 		getConfig();
-		ConfigureLogging();
+		configureLogging();
 		log.info("Starting......");
 		try {
 			log.info("Getting Network Interfaces");
@@ -174,7 +174,7 @@ public class StartMe {
 	/***
 	 * Set up our logging
 	 */
-	private static void ConfigureLogging() {
+	private static void configureLogging() {
 
 		try {
 			CustomPatternLayout pl = new CustomPatternLayout();
