@@ -14,6 +14,7 @@
 
     <!-- More Project Information -->
     <name>MediaPlayer Core</name>
+    <description>Core Module for the OpenHome MediaPlayer</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

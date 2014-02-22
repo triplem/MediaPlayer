@@ -36,6 +36,7 @@ import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventTrackChanged;
 import org.rpi.player.events.EventUpdateTrackMetaText;
 import org.rpi.playlist.CustomTrack;
+import org.rpi.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -73,7 +74,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     private String artist = "";
     private List<BlackList> blackList = new ArrayList<BlackList>();
 
-    private static Session session =null;
+    private static Session session = null;
 
     /**
      *
@@ -111,6 +112,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     }
 
     /**
+     * Convenience method to call scrobble without an album.
      *
      * @param title
      * @param artist
@@ -120,13 +122,14 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     }
 
     /**
+     * Sends the track data to lastfm (scrobbles the track), if the track and/or the artist is not in the blacklist.
      *
      * @param title
      * @param artist
      * @param album
      */
     private void scrobble(String title, String artist, String album) {
-        if(session ==null)
+        if(session == null)
             return;
         if (!changedTrack(title, artist))
             return;
@@ -148,7 +151,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         data.setTimestamp(now);
         data.setArtist(artist);
         data.setTrack(title);
-        if (!isEmpty(album)) {
+        if (!Utils.isEmpty(album)) {
             data.setAlbum(album);
         }
         ScrobbleResult sres = Track.scrobble(data, session);
@@ -159,7 +162,8 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     }
 
     /**
-     *
+     * Initializes the connection to lastfm, it stores the details of the connection (session) inside the local
+     * session member.
      */
     private void init() {
         try {
@@ -286,14 +290,6 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
                 return;
             }
         n.appendChild(doc.createTextNode(def));
-    }
-
-    public boolean isEmpty(String string) {
-        if (string == null || string.equals("") || string.length() == 0) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

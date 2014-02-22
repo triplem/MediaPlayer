@@ -13,7 +13,7 @@
     <description>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
         UPNP Renderer.
     </description>
-    <url>https://github.com/PeteManchester/MediaPlayer</url>
+    <url>https://github.com/triplem/MediaPlayer</url>
     <inceptionYear>2013</inceptionYear>
 
     <developers>
@@ -117,6 +117,25 @@
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <show>private</show>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <profiles>
         <profile>
             <id>release</id>
@@ -171,6 +190,10 @@
             <name>oss-jfrog-artifactory-snapshots</name>
             <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
         </snapshotRepository>
+        <site>
+            <id>triplem.github.io/MediaPlayer</id>
+            <url>${github.global.server}</url>
+        </site>
     </distributionManagement>
 
     <repositories>
@@ -250,7 +273,7 @@
         <openhome.debug.level>Error</openhome.debug.level>
         <openhome.port>52821</openhome.port>
 
-        <github.global.server>github</github.global.server>
+        <github.global.server>http://triplem.github.io/MediaPlayer</github.global.server>
     </properties>
 
 
