@@ -29,12 +29,8 @@
             <outputDirectory>.</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>src/main/assembly/linux</directory>
-            <outputDirectory>mediaplayer_lib/ohNet/linux</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/assembly/windows</directory>
-            <outputDirectory>mediaplayer_lib/ohNet/windows</outputDirectory>
+            <directory>src/main/assembly/mediaplayer_lib/ohNet</directory>
+            <outputDirectory>mediaplayer_lib/ohNet</outputDirectory>
         </fileSet>
     </fileSets>
 

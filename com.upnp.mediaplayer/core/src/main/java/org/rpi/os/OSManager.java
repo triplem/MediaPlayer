@@ -88,7 +88,7 @@ public class OSManager {
 			String path = getFilePath(this.getClass(), true);
             path = path + "/";
             if (path.endsWith("/")) {
-                path = path.substring(0, (path.length() - 2));
+                path = path.substring(0, (path.length() - 1));
                 log.debug("Path ended with '/'. Updated Path to be: " + path);
             }
             else {
