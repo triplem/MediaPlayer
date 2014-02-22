@@ -8,7 +8,6 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.rpi.utils.Utils;
@@ -87,36 +86,63 @@ public class OSManager {
 	 * Set the Path to the ohNetxx.so files
 	 */
 	private void setJavaPath() {
-		try {
-			String class_name = this.getClass().getName();
-			log.debug("Find Class, ClassName: " + class_name);
-			String path = getFilePath(this.getClass(), true);
-//          path = path + "/";
-            if (path.endsWith("/")) {
-                path = path.substring(0, (path.length() - 1));
-                log.debug("Path ended with '/'. Updated Path to be: " + path);
+        String fullPath = constructLibraryPath();
+        if (!Utils.isEmpty(fullPath)) {
+            try {
+                addLibraryPath(fullPath);
+            } catch (Exception e) {
+               log.error("Cannot add library path", e);
             }
-//            else {
-//                // this should not happen, shouldn't it?
-//                log.debug("Path did not end with '/': " + path);
-//            }
-
-            String full_path = path + getOhnetLibDir();
-
-			log.warn("Using full_path " + full_path);
-			addLibraryPath(full_path);
-
-		} catch (Exception e) {
-			log.error(e);
-		}
-
+        }
 	}
 
+    /**
+     * Constructs the additional library path.
+     *
+     * public to avoid problems for unit tests.
+     *
+     * @return
+     */
+    public String constructLibraryPath() {
+        String fullPath = null;
+
+        String class_name = this.getClass().getName();
+        log.debug("Find Class, ClassName: " + class_name);
+        String path = getFilePath(this.getClass(), true);
+
+        if (path.endsWith("/")) {
+            path = path.substring(0, (path.length() - 1));
+            log.debug("Path ended with '/'. Updated Path to be: " + path);
+        } else {
+            log.debug("Path did not end with '/': " + path);
+        }
+
+        fullPath = path + getOhnetLibDir();
+
+        log.warn("Using fullPath " + fullPath);
+
+        return fullPath;
+    }
+
+    /**
+     * retrieves the path suffix for the ohNet.so files (suffix in this case means all path elements inclusive
+     * /mediaplayer_lib).
+     *
+     * E.g. you will receive mediaplayer_lib/ohNet/linux/amd64, if you are running on an amd64 system.
+     *
+     * The default is OHNET_LIB_DIR + "/default". If your system is not recognized, you are still able to copy your
+     * applicable libs to this directory and use the mediaplayer.
+     *
+     * @return
+     */
     public String getOhnetLibDir() {
+
         String path_suffix = OHNET_LIB_DIR + "/default";
         log.debug("Path of this File is: " + path_suffix);
+
         String os = System.getProperty("os.name").toUpperCase();
         log.debug("OS Name: " + os);
+
         if (os.startsWith("WINDOWS")) {
             log.debug("Windows OS");
             String osPathName = "windows";
@@ -187,6 +213,11 @@ public class OSManager {
 	 * Getting LCD.xml from Directory: /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin
 	 * Instead of
 	 * /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin/org/rpi/plugin/lcddisplay/
+     *
+     * For unit testing or for other special circumstances a system property "mediaplayer.core.home"
+     * variable is used. If this variable is set, the value of this variable is returned instead of the
+     * path of the current class.
+     *
 	 * @return
 	 */
 //	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
