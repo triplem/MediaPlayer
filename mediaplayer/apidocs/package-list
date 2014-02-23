@@ -1,0 +1,17 @@
+org.openhome.net.device.tests
+org.rpi.config
+org.rpi.log
+org.rpi.main
+org.rpi.mpdplayer
+org.rpi.mplayer
+org.rpi.os
+org.rpi.player
+org.rpi.player.events
+org.rpi.player.observers
+org.rpi.playlist
+org.rpi.plugingateway
+org.rpi.providers
+org.rpi.radio
+org.rpi.radio.parsers
+org.rpi.sources
+org.rpi.utils
