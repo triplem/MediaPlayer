@@ -264,7 +264,7 @@
 
         <scmPublish.checkoutDirectory>${project.build.directory}/scmpublish</scmPublish.checkoutDirectory>
         <!-- Location of where "site" documentation is output -->
-        <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOuputDirectory>
+        <scm-publish.siteDocOuputDirectory>${project.build.directory}/staging</scm-publish.siteDocOuputDirectory>
 
         <!-- Project specific settings for app.properties -->
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
