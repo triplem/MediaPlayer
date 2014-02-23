@@ -268,7 +268,7 @@ Some notes about generating documentation:
 see https://help.github.com/articles/creating-project-pages-manually on how to create a new branch gh-pages
 
 mvn site:site scm-publish:publish-scm -Dscmpublish.dryRun=true
-
+--> subprojects are not published correctly right now, fix this.
 
 
 
