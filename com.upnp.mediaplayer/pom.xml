@@ -104,6 +104,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>1.0</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <checkoutDirectory>${scmPublish.checkoutDirectory}</checkoutDirectory>
+                        <checkinComment>Publishing Site Docs for ${project.artifactId}:${project.version}</checkinComment>
+                        <!-- Plugins defaults to "target/staging" and since the distributionManagement section is a pain in the ass for site docs, this is easier -->
+                        <content>${scm-publish.siteDocOuputDirectory}</content>
+                        <skipDeletedFiles>true</skipDeletedFiles>
+                        <pubScmUrl>${scm-publish.pubScmUrl}</pubScmUrl>
+                        <scmBranch>${scm-publish.scmBranch}</scmBranch>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -184,7 +194,7 @@
         </snapshotRepository>
         <site>
             <id>github</id>
-            <url>scm:git:ssh://git@github.com/triplem/MediaPlayer.git</url>
+            <url>file://${site-docs.url}</url>
         </site>
     </distributionManagement>
 
@@ -244,9 +254,13 @@
         <github.global.server>github</github.global.server>
 
         <!-- publish site to ghPages -->
+        <!-- Overwrite Expected to be a "FILE" URI, Used for site:stage-deploy -->
+        <site-docs.url>/tmp/sitedocs/${project.artifactId}</site-docs.url>
+
         <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>
         <scm-publish.pubScmUrl>scm:git:git@github.com:triplem/MediaPlayer.git</scm-publish.pubScmUrl>
 
+        <scmPublish.checkoutDirectory>${project.build.directory}/scmpublish</scmPublish.checkoutDirectory>
         <!-- Location of where "site" documentation is output -->
         <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>
 
