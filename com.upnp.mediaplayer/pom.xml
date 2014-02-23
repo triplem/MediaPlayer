@@ -50,22 +50,6 @@
                 <artifactId>wagon-ssh</artifactId>
                 <version>${maven-wagon.version}</version>
             </extension>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-scm</artifactId>
-                <version>${maven-wagon.version}</version>
-            </extension>
-
-            <extension>
-                <groupId>org.apache.maven.scm</groupId>
-                <artifactId>maven-scm-manager-plexus</artifactId>
-                <version>${maven-scm.version}</version>
-            </extension>
-            <extension>
-                <groupId>org.apache.maven.scm</groupId>
-                <artifactId>maven-scm-provider-gitexe</artifactId>
-                <version>${maven-scm.version}</version>
-            </extension>
         </extensions>
 
         <pluginManagement>
@@ -116,6 +100,11 @@
                     <version>2.7</version>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>1.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -251,9 +240,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-wagon.version>2.6</maven-wagon.version>
-        <maven-scm.version>1.9</maven-scm.version>
 
         <github.global.server>github</github.global.server>
+
+        <!-- publish site to ghPages -->
+        <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>
+        <scm-publish.pubScmUrl>scm:git:git@github.com:triplem/MediaPlayer.git</scm-publish.pubScmUrl>
+
+        <!-- Location of where "site" documentation is output -->
+        <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>
 
         <!-- Project specific settings for app.properties -->
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
