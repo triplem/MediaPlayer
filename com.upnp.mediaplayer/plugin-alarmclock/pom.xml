@@ -16,7 +16,12 @@
   <name>MediaPlayer Plugin AlarmClock</name>
   <description>Plugin which allows you to create an alarm clock</description>
 
-  <build>
+    <properties>
+        <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}/staging</scm-publish.siteDocOuputDirectory>
+        <site-docs.url>/tmp/sitedocs/mediaplayer/${project.artifactId}</site-docs.url>
+    </properties>
+
+    <build>
       <plugins>
           <plugin>
               <artifactId>maven-assembly-plugin</artifactId>

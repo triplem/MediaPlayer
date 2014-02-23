@@ -17,7 +17,8 @@
     <description>Core Module for the OpenHome MediaPlayer</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}/staging</scm-publish.siteDocOuputDirectory>
+        <site-docs.url>/tmp/sitedocs/mediaplayer/${project.artifactId}</site-docs.url>
     </properties>
 
     <build>

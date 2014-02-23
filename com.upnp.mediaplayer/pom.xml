@@ -13,7 +13,7 @@
     <description>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
         UPNP Renderer.
     </description>
-    <url>https://github.com/triplem/MediaPlayer</url>
+    <url>http://triplem.github.io/triplem/MediaPlayer</url>
     <inceptionYear>2013</inceptionYear>
 
     <developers>
@@ -249,20 +249,22 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <maven-wagon.version>2.6</maven-wagon.version>
 
         <github.global.server>github</github.global.server>
 
         <!-- publish site to ghPages -->
         <!-- Overwrite Expected to be a "FILE" URI, Used for site:stage-deploy -->
-        <site-docs.url>/tmp/sitedocs/${project.artifactId}</site-docs.url>
+        <site-docs.url>/tmp/sitedocs/mediaplayer</site-docs.url>
 
         <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>
         <scm-publish.pubScmUrl>scm:git:git@github.com:triplem/MediaPlayer.git</scm-publish.pubScmUrl>
 
         <scmPublish.checkoutDirectory>${project.build.directory}/scmpublish</scmPublish.checkoutDirectory>
         <!-- Location of where "site" documentation is output -->
-        <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>
+        <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOuputDirectory>
 
         <!-- Project specific settings for app.properties -->
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
