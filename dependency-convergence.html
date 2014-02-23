@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>MediaPlayer - About</title>
+    <title>MediaPlayer - Reactor Dependency Convergence</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -72,8 +72,8 @@
                           <a href="project-info.html" title="Project Information">Project Information</a>
                     <ul>
                       <li class="none">
-            <strong>About</strong>
-          </li>
+                          <a href="index.html" title="About">About</a>
+            </li>
                       <li class="none">
                           <a href="plugin-management.html" title="Plugin Management">Plugin Management</a>
             </li>
@@ -84,8 +84,8 @@
                           <a href="dependency-info.html" title="Dependency Information">Dependency Information</a>
             </li>
                       <li class="none">
-                          <a href="dependency-convergence.html" title="Dependency Convergence">Dependency Convergence</a>
-            </li>
+            <strong>Dependency Convergence</strong>
+          </li>
                       <li class="none">
                           <a href="source-repository.html" title="Source Repository">Source Repository</a>
             </li>
@@ -132,41 +132,164 @@
     <div id="bodyColumn">
       <div id="contentBox">
         <div class="section">
-<h2>About MediaPlayer<a name="About_MediaPlayer"></a></h2><a name="About_MediaPlayer"></a>
-<p>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
-        UPNP Renderer.</p>
+<h2>Reactor Dependency Convergence<a name="Reactor_Dependency_Convergence"></a></h2>
+<table border="0" class="bodyTable"><caption>
+  <b>Legend:</b>
+</caption>
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>All projects share one version of the dependency.</td></tr>
+<tr class="b">
+<td><img alt="error" src="images/icon_error_sml.gif" /></td>
+<td>At least one project has a differing version of the dependency.</td></tr></table><br />
+<table border="0" class="bodyTable"><caption>
+  <b>Statistics:</b>
+</caption>
+<tr class="a">
+<th>Number of sub-projects:</th>
+<td>8</td></tr>
+<tr class="b">
+<th>Number of dependencies (NOD):</th>
+<td>10</td></tr>
+<tr class="a">
+<th>Number of unique artifacts (NOA):</th>
+<td>10</td></tr>
+<tr class="b">
+<th>Number of SNAPSHOT artifacts (NOS):</th>
+<td>0</td></tr>
+<tr class="a">
+<th>Convergence (NOD/NOA):</th>
+<td><img alt="success" src="images/icon_success_sml.gif" />&#160;<b>100%</b></td></tr>
+<tr class="b">
+<th>Ready for Release (100% Convergence and no SNAPSHOTS):</th>
+<td><img alt="success" src="images/icon_success_sml.gif" />&#160;<b>Success</b></td></tr></table></div>
 <div class="section">
-<h3>Project Modules<a name="Project_Modules"></a></h3><a name="Project_Modules"></a>
-<p>This project has declared the following modules:</p>
+<h3>Dependencies used in sub-projects<a name="Dependencies_used_in_sub-projects"></a></h3>
+<div class="section">
+<h4>com.pi4j:pi4j-core<a name="com.pi4j:pi4j-core"></a></h4>
 <table border="0" class="bodyTable">
 <tr class="a">
-<th>Name</th>
-<th>Description</th></tr>
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
 <tr class="b">
-<td><a href="mediaplayer/index.html">MediaPlayer Core</a></td>
-<td>Core Module for the OpenHome MediaPlayer</td></tr>
+<td width="25%">0.0.5</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/mediaplayer">org.rpi:mediaplayer</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>de.u-mass:lastfm-java<a name="de.u-mass:lastfm-java"></a></h4>
+<table border="0" class="bodyTable">
 <tr class="a">
-<td><a href="AlarmClock/index.html">MediaPlayer Plugin AlarmClock</a></td>
-<td>Plugin which allows you to create an alarm clock</td></tr>
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
 <tr class="b">
-<td><a href="CustomButton/index.html">MediaPlayer Plugin CustomButton</a></td>
-<td>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
-        UPNP Renderer.</td></tr>
+<td width="25%">0.1.2</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LastFM-plugin">org.rpi:LastFM-plugin</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>junit:junit<a name="junit:junit"></a></h4>
+<table border="0" class="bodyTable">
 <tr class="a">
-<td><a href="CustomInputSource/index.html">MediaPlayer Plugin CustomInputSource</a></td>
-<td>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
-        UPNP Renderer.</td></tr>
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
 <tr class="b">
-<td><a href="LCDDisplay/index.html">MediaPlayer Plugin LCDDisplay</a></td>
-<td>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
-        UPNP Renderer.</td></tr>
+<td width="25%">4.8.1</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LastFM-plugin">org.rpi:LastFM-plugin</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>log4j:log4j<a name="log4j:log4j"></a></h4>
+<table border="0" class="bodyTable">
 <tr class="a">
-<td><a href="LIRCIntegration/index.html">MediaPlayer Plugin LIRCIntegration</a></td>
-<td>A java project that uses the OpenHome API (http://www.openhome.org/wiki/Oh:Overview) to implement a
-        UPNP Renderer.</td></tr>
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
 <tr class="b">
-<td><a href="LastFM-plugin/index.html">MediaPlayer Plugin LastFM Integration</a></td>
-<td>Integrates LastFM to the OpenHome MediaPlayer</td></tr></table></div></div>
+<td width="25%">1.2.16</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/mediaplayer">org.rpi:mediaplayer</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>net.xeoh.plugins:jspf-core<a name="net.xeoh.plugins:jspf-core"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">1.0.2</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/mediaplayer">org.rpi:mediaplayer</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>org.openhome.net:ohnet<a name="org.openhome.net:ohnet"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">0.9</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/mediaplayer">org.rpi:mediaplayer</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>org.quartz-scheduler:quartz<a name="org.quartz-scheduler:quartz"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">2.1.1</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/AlarmClock">org.rpi:AlarmClock</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>org.rpi:CustomInputSource<a name="org.rpi:CustomInputSource"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">0.0.4-SNAPSHOT</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LIRCIntegration">org.rpi:LIRCIntegration</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>org.rpi:mediaplayer<a name="org.rpi:mediaplayer"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">0.0.4-SNAPSHOT</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/AlarmClock">org.rpi:AlarmClock</a></li>
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/CustomButton">org.rpi:CustomButton</a></li>
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/CustomInputSource">org.rpi:CustomInputSource</a></li>
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LCDDisplay">org.rpi:LCDDisplay</a></li>
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LIRCIntegration">org.rpi:LIRCIntegration</a></li>
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/LastFM-plugin">org.rpi:LastFM-plugin</a></li></ol></td></tr></table></td></tr></table></div>
+<div class="section">
+<h4>org.slf4j:slf4j-log4j12<a name="org.slf4j:slf4j-log4j12"></a></h4>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>
+<table border="0" class="bodyTable">
+<tr class="b">
+<td width="25%">1.6.1</td>
+<td>
+<ol style="list-style-type: lower-alpha">
+<li><a class="externalLink" href="https://github.com/triplem/MediaPlayer/AlarmClock">org.rpi:AlarmClock</a></li></ol></td></tr></table></td></tr></table></div></div>
       </div>
     </div>
     <div class="clear">
