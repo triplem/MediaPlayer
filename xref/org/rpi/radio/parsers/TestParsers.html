@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TestParsers xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../apidocs/org/rpi/radio/parsers/TestParsers.html">View Javadoc</a></div><pre>
+
+<a class="jxr_linenumber" name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> org.rpi.radio.parsers;
+<a class="jxr_linenumber" name="2" href="#2">2</a>   
+<a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> org.apache.log4j.BasicConfigurator;
+<a class="jxr_linenumber" name="4" href="#4">4</a>   
+<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/rpi/radio/parsers/TestParsers.html">TestParsers</a> {
+<a class="jxr_linenumber" name="6" href="#6">6</a>   
+<a class="jxr_linenumber" name="7" href="#7">7</a>       <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="8" href="#8">8</a>   <em class="jxr_javadoccomment">     * @param args</em>
+<a class="jxr_linenumber" name="9" href="#9">9</a>   <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="10" href="#10">10</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(String[] args) {
+<a class="jxr_linenumber" name="11" href="#11">11</a>          BasicConfigurator.configure();
+<a class="jxr_linenumber" name="12" href="#12">12</a>          <a href="../../../../org/rpi/radio/parsers/PLSParser.html">PLSParser</a> pls = <strong class="jxr_keyword">new</strong> <a href="../../../../org/rpi/radio/parsers/PLSParser.html">PLSParser</a>();
+<a class="jxr_linenumber" name="13" href="#13">13</a>          <em class="jxr_comment">//pls.getStreamingUrl("http://radio.linnrecords.com/cast/tunein.php/linnjazz/playlist.pls");</em>
+<a class="jxr_linenumber" name="14" href="#14">14</a>          <a href="../../../../org/rpi/radio/parsers/M3UParser.html">M3UParser</a> m3u = <strong class="jxr_keyword">new</strong> <a href="../../../../org/rpi/radio/parsers/M3UParser.html">M3UParser</a>();
+<a class="jxr_linenumber" name="15" href="#15">15</a>          <em class="jxr_comment">//m3u.getStreamingUrl("http://media-ice.musicradio.com/CapitalManchesterMP3.m3u");</em>
+<a class="jxr_linenumber" name="16" href="#16">16</a>          <em class="jxr_comment">//ASXParser asx = new ASXParser();</em>
+<a class="jxr_linenumber" name="17" href="#17">17</a>          <em class="jxr_comment">//asx.getStreamingUrl("http://bbc.co.uk/radio/listen/live/bbcmanchester.asx");</em>
+<a class="jxr_linenumber" name="18" href="#18">18</a>          <a href="../../../../org/rpi/radio/parsers/FileParser.html">FileParser</a> asx = <strong class="jxr_keyword">new</strong> <a href="../../../../org/rpi/radio/parsers/FileParser.html">FileParser</a>();
+<a class="jxr_linenumber" name="19" href="#19">19</a>          <em class="jxr_comment">//asx.getStreamingUrl("http://192.168.1.205:26125/content/c2/b24/f96000/d92628-co38099.flac");</em>
+<a class="jxr_linenumber" name="20" href="#20">20</a>          <em class="jxr_comment">//asx.getStreamingUrl("http://192.168.1.205:26125/content/c2/b16/f44100/d78050-co1674.mp3");</em>
+<a class="jxr_linenumber" name="21" href="#21">21</a>          <em class="jxr_comment">//asx.getURL("http://www.bbc.co.uk/mediaselector/4/asx/b039vd9f/iplayer_intl_stream_wma_uk_concrete");</em>
+<a class="jxr_linenumber" name="22" href="#22">22</a>          <em class="jxr_comment">//asx.getURL("http://bbc.co.uk/radio/listen/live/bbcmanchester.asx");</em>
+<a class="jxr_linenumber" name="23" href="#23">23</a>          <em class="jxr_comment">//asx.getURL("http://webradio.radiomonitor.com/m3u/talksport");</em>
+<a class="jxr_linenumber" name="24" href="#24">24</a>          <em class="jxr_comment">//asx.getStreamingUrl("http://gmgmp3.shoutcast.streamuk.com:10022/listen.pls");</em>
+<a class="jxr_linenumber" name="25" href="#25">25</a>          <em class="jxr_comment">//asx.getStreamingUrl("http://media.on.net/radio/137.m3u");</em>
+<a class="jxr_linenumber" name="26" href="#26">26</a>          <em class="jxr_comment">//asx.getURL("http://streamb.wgbh.org:8004/");</em>
+<a class="jxr_linenumber" name="27" href="#27">27</a>          <em class="jxr_comment">//asx.getURL("http://streaming.radionz.co.nz/concert-mbr");</em>
+<a class="jxr_linenumber" name="28" href="#28">28</a>          <em class="jxr_comment">//asx.getURL("http://www.voanews.com/wm/live/radiodeewa.asx");</em>
+<a class="jxr_linenumber" name="29" href="#29">29</a>          asx.getURL(<span class="jxr_string">"http://192.168.1.205:26125/content/c2/b16/f44100/d87996-co122.flac"</span>);
+<a class="jxr_linenumber" name="30" href="#30">30</a>  
+<a class="jxr_linenumber" name="31" href="#31">31</a>      }
+<a class="jxr_linenumber" name="32" href="#32">32</a>  
+<a class="jxr_linenumber" name="33" href="#33">33</a>  }
+</pre>
+<hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
+</html>
