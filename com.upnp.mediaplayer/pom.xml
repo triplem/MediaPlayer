@@ -50,6 +50,22 @@
                 <artifactId>wagon-ssh</artifactId>
                 <version>${maven-wagon.version}</version>
             </extension>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-scm</artifactId>
+                <version>${maven-wagon.version}</version>
+            </extension>
+
+            <extension>
+                <groupId>org.apache.maven.scm</groupId>
+                <artifactId>maven-scm-manager-plexus</artifactId>
+                <version>${maven-scm.version}</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.scm</groupId>
+                <artifactId>maven-scm-provider-gitexe</artifactId>
+                <version>${maven-scm.version}</version>
+            </extension>
         </extensions>
 
         <pluginManagement>
@@ -102,25 +118,6 @@
 
             </plugins>
         </pluginManagement>
-
-        <plugins>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.9</version>
-                <configuration>
-                    <message>Creating site for ${project.version}</message>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>site</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 
     <reporting>
@@ -198,7 +195,7 @@
         </snapshotRepository>
         <site>
             <id>github</id>
-            <url>${github.global.server}</url>
+            <url>scm:git:ssh://git@github.com/triplem/MediaPlayer.git</url>
         </site>
     </distributionManagement>
 
@@ -254,9 +251,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-wagon.version>2.6</maven-wagon.version>
+        <maven-scm.version>1.9</maven-scm.version>
 
         <github.global.server>github</github.global.server>
 
+        <!-- Project specific settings for app.properties -->
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
         <friendly.name>MediaPlayer (Made in Manchester)</friendly.name>
         <player>mpd</player>
