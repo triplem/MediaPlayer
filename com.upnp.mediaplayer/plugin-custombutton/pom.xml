@@ -16,7 +16,6 @@
 
     <properties>
         <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}/staging</scm-publish.siteDocOuputDirectory>
-        <site-docs.url>/tmp/sitedocs/mediaplayer/${project.artifactId}</site-docs.url>
     </properties>
 
     <build>
