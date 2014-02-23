@@ -48,7 +48,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>2.6</version>
+                <version>${maven-wagon.version}</version>
             </extension>
         </extensions>
 
@@ -94,6 +94,12 @@
                     </executions>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
@@ -101,7 +107,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.8</version>
+                <version>0.9</version>
                 <configuration>
                     <message>Creating site for ${project.version}</message>
                 </configuration>
@@ -191,7 +197,7 @@
             <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
         </snapshotRepository>
         <site>
-            <id>triplem.github.io/MediaPlayer</id>
+            <id>github</id>
             <url>${github.global.server}</url>
         </site>
     </distributionManagement>
@@ -247,6 +253,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-wagon.version>2.6</maven-wagon.version>
+
+        <github.global.server>github</github.global.server>
 
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
         <friendly.name>MediaPlayer (Made in Manchester)</friendly.name>
@@ -272,8 +281,6 @@
 
         <openhome.debug.level>Error</openhome.debug.level>
         <openhome.port>52821</openhome.port>
-
-        <github.global.server>http://triplem.github.io/MediaPlayer</github.global.server>
     </properties>
 
 
