@@ -261,3 +261,8 @@ irsend L
 irsend LIST TEAC_H300 ""
 irsend SEND_ONCE TEAC_H300 KEY_VOLUMEUP
 irsend SEND_ONCE TEAC_H300 KEY_VOLUMEDOWN
+
+
+Some notes about generating documentation:
+
+mvn site:site scm-publish:publish-scm -Dscmpublish.dryRun=true
