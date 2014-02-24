@@ -424,10 +424,11 @@ public class CustomTrack {
     }
 
     public String getArtist() {
-        String text = artist.toString();
-        if(text.endsWith(","))
-            text = text.substring(0,text.length()-1);
-        return text;
+//        String text = artist.toString();
+//        if(text.endsWith(","))
+//            text = text.substring(0,text.length()-1);
+//        return text;
+        return getPerformer();
     }
 
     public void setArtist(String artist) {
