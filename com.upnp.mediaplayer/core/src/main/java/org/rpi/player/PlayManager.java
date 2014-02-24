@@ -27,13 +27,8 @@ import org.rpi.player.events.EventTimeUpdate;
 import org.rpi.player.events.EventTrackChanged;
 import org.rpi.player.events.EventUpdateTrackMetaText;
 import org.rpi.player.events.EventVolumeChanged;
-import org.rpi.player.observers.ObservableAVTransport;
-import org.rpi.player.observers.ObservableInfo;
-import org.rpi.player.observers.ObservablePlayList;
-import org.rpi.player.observers.ObservableProduct;
-import org.rpi.player.observers.ObservableRadio;
-import org.rpi.player.observers.ObservableVolume;
-import org.rpi.player.observers.ObservsableTime;
+import org.rpi.player.observers.*;
+import org.rpi.player.observers.ObservableTime;
 import org.rpi.playlist.CustomTrack;
 import org.rpi.radio.CustomChannel;
 //import org.rpi.mplayer.MPlayer;
@@ -60,7 +55,7 @@ public class PlayManager implements Observer {
 	private boolean bExternalVolume = false;
 
 	// Observable Classes
-	private ObservsableTime obsvTime = new ObservsableTime();
+	private ObservableTime obsvTime = new ObservableTime();
 	private ObservableInfo obsvInfo = new ObservableInfo();
 	private ObservableVolume obsvVolume = new ObservableVolume();
 	private ObservableRadio obsvRadio = new ObservableRadio();
