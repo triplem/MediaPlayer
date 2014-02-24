@@ -321,7 +321,7 @@
         <!-- Location of where "site" documentation is output -->
         <scm-publish.siteDocOuputDirectory>${project.build.directory}/staging</scm-publish.siteDocOuputDirectory>
 
-        <!-- Project specific settings for app.properties -->
+        <!-- Project specific settings for app.properties (will be used by default) -->
         <!-- define default properties for the application, these can be overwritten for certain profiles (e.g. debug) -->
         <friendly.name>MediaPlayer (Made in Manchester)</friendly.name>
         <player>mpd</player>

@@ -1,6 +1,7 @@
 package org.rpi.main;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -135,12 +136,20 @@ public class StartMe {
 	}
 
 	/***
-	 * Read the app.properties file
+	 * Read the app.properties file from the current directory.
+     *
+     * If the app.properties file is not found there, it will try to load the app.properties from the classpath.
 	 */
 	private static void getConfig() {
 		Properties pr = new Properties();
 		try {
-			pr.load(new FileInputStream("app.properties"));
+			File appProperties = new File("app.properties");
+            if (!appProperties.exists()) {
+                pr.load(StartMe.class.getClassLoader().getResourceAsStream("app.properties"));
+            } else {
+                pr.load(new FileInputStream("app.properties"));
+            }
+
 			Config.friendly_name = pr.getProperty("friendly.name");
 
 			try {

@@ -71,6 +71,25 @@
 
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.rpi.main.StartMe</mainClass>
+                    <arguments>
+                        <argument>-Dmediaplayer.core.home=src/main/assembly</argument>
+                        <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>

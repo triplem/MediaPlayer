@@ -46,7 +46,7 @@ public class TCPConnector extends Observable implements Observer {
 		try {
 			connect();
 		} catch (Exception e) {
-			log.error(e);
+			log.error("Cannot connect to MPD", e);
 		}
 	}
 

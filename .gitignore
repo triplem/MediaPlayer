@@ -8,3 +8,4 @@ build/
 target/
 *.pyc
 .idea/
+mediaplayer.log
