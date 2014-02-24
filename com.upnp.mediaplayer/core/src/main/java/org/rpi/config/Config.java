@@ -6,15 +6,20 @@ import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Level;
 
+/**
+ * Central class to hold the configuration values of the application.
+ *
+ * All values are static, so that we do not need to handover this class to every method, which needs those
+ * values.
+ */
 public class Config {
-	
-	
+
 	public static String friendly_name = "Default Room";
 	public static List<String> playlists = new ArrayList<String>();
 	public static String debug = "None";
 	public static String mplayer_path= "/usr/bin/mplayer";
 	public static boolean save_local_playlist = false;
-	public static String version = "0.0.0.7";
+	public static String version = "0.0.4-SNAPSHOT"; // try to get this from the maven build parameter
 	public static String logfile = "mediaplayer.log";
 	public static int port = -99;
 	public static int mplayer_cache = 500;
@@ -26,13 +31,11 @@ public class Config {
 	public static int mpd_port = 6600;
 	public static String player = "mpd";
 	public static int mpd_preload_timer = 10;
-	public static boolean enableAVTransport =true;
+	public static boolean enableAVTransport = true;
 	public static boolean enableReceiver = true;
 	
 	private static Calendar cal = Calendar.getInstance();
-	
-	
-	
+
 	public static String getProtocolInfo() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("http-get:*:audio/x-flac:*,");
