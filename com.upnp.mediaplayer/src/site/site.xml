@@ -5,6 +5,10 @@
 
         <menu name="Details" inherit="top">
             <item name="Changelog" href="changelog.html"/>
+            <item name="Install on Raspberry PI" href="install_raspi.html"/>
+            <item name="Build Instructions" href="build_instructions.html"/>
+            <item name="MediaPlayer Config Options" href="config_options.html"/>
+            <item name="Radio Stations" href="radio_stations.md"/>
         </menu>
 
         <menu ref="modules" inherit="top"/>
