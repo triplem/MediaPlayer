@@ -84,10 +84,12 @@
                 </executions>
                 <configuration>
                     <mainClass>org.rpi.main.StartMe</mainClass>
-                    <arguments>
-                        <argument>-Dmediaplayer.core.home=src/main/assembly</argument>
-                        <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argument>
-                    </arguments>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>mediaplayer.core.home</key>
+                            <value>${basedir}/../core/src/main/assembly</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
 

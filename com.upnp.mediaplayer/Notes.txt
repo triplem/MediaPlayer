@@ -268,3 +268,13 @@ Some notes about generating documentation:
 see https://help.github.com/articles/creating-project-pages-manually on how to create a new branch gh-pages
 
 mvn site:site site:attach-descriptor site:stage scm-publish:publish-scm -Dscmpublish.dryRun=true
+
+run application via mvn (in core), with debug options set:
+mvn clean install exec:java -Pdebug
+
+In each plugin the above is possible as well ;-)
+
+To debug the app, run mvnDebug instead of mvn.
+
+Problem right now: you need to re-build the core with the correct profile to use the settings of the profile (debug, ...)
+even in the plugins.
