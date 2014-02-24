@@ -22,16 +22,19 @@ import org.xml.sax.InputSource;
 
 public class CustomTrack {
 
-    private Logger log = Logger.getLogger(CustomTrack.class);
-    private String Uri = "";
-    private String entryStart = "<Entry>";
-    private String entryEnd = "</Entry>";
-    private String idStart = "<Id>";
-    private String idEnd = "</Id>";
-    private String uriStart = "<Uri>";
-    private String uriEnd = "</Uri>";
-    private String metaStart = "<Metadata>";
-    private String metaEnd = "</Metadata>";
+    private static final Logger LOG = Logger.getLogger(CustomTrack.class);
+
+    private static final String ENTRY_START = "<Entry>";
+    private static final String ENTRY_END = "</Entry>";
+    private static final String ID_START = "<Id>";
+    private static final String ID_END = "</Id>";
+    private static final String URI_START = "<Uri>";
+    private static final String URI_END = "</Uri>";
+    private static final String META_START = "<Metadata>";
+    private static final String META_END = "</Metadata>";
+
+    private String uri = "";
+
     private String title = "";
     private String album = "";
     private StringBuffer artist = new StringBuffer();
@@ -42,63 +45,64 @@ public class CustomTrack {
     private String full_text = "";
     private String date = "";
     private boolean icy_reverse = false;
+    private String albumArtUri = "";
+
+    private String metadata;
+
+    private int id;
+    private String metatext = "";
+    private long time = -99;
+    private String full_details;
 
     public CustomTrack(String uri, String metadata, int id) {
         // long startTime = System.nanoTime();
         setUri(uri);
         setMetadata(metadata);
         setId(id);
-        full_text = GetFullString();
+        full_text = getXmlString();
         if (!metadata.equalsIgnoreCase("")) {
             getTrackDetails();
             setFullDetails();
         }
         // long endTime = System.nanoTime();
         // long duration = endTime - startTime;
-        // log.warn("Time to Add CustomTrack: " + duration);
+        // LOG.warn("Time to Add CustomTrack: " + duration);
     }
 
     public String getUniqueId() {
-        return "PL:" + Id;
+        return "PL:" + id;
     }
 
-    private String Metadata;
-
-    private int Id;
-    private String metatext = "";
-    private long time = -99;
-    private String full_details;
-
-    private String GetFullString() {
+    private String getXmlString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(entryStart);
-        sb.append(idStart);
+        sb.append(ENTRY_START);
+        sb.append(ID_START);
         sb.append(getId());
-        sb.append(idEnd);
-        sb.append(uriStart);
+        sb.append(ID_END);
+        sb.append(URI_START);
         sb.append(protectSpecialCharacters(getUri()));
-        sb.append(uriEnd);
-        sb.append(metaStart);
+        sb.append(URI_END);
+        sb.append(META_START);
         sb.append(protectSpecialCharacters(getMetadata()));
-        sb.append(metaEnd);
-        sb.append(entryEnd);
+        sb.append(META_END);
+        sb.append(ENTRY_END);
         return sb.toString();
     }
 
-    public String getFullString() {
+    public String getFullText() {
         return full_text;
     }
 
     public String getUri() {
-        return Uri;
+        return uri;
     }
 
     private void setUri(String uri) {
-        Uri = uri;
+        this.uri = uri;
     }
 
     public String getMetadata() {
-        return Metadata;
+        return metadata;
     }
 
     public String getMetaClean() {
@@ -106,15 +110,15 @@ public class CustomTrack {
     }
 
     private void setMetadata(String metadata) {
-        Metadata = metadata;
+        this.metadata = metadata;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     private void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String tidyMetaData() {
@@ -137,10 +141,10 @@ public class CustomTrack {
                 boolean remove = true;
                 if (n.getNodeName() == "dc:title") {
                     remove = false;
-                } else if (n.getNodeName() == "upnp:album") {
+                }
+                else if (n.getNodeName() == "upnp:album") {
                     remove = false;
                 }
-
                 else if (n.getNodeName() == "upnp:artist") {
                     NamedNodeMap map = n.getAttributes();
                     Node role = map.getNamedItem("role");
@@ -153,11 +157,9 @@ public class CustomTrack {
                     }
 
                 }
-
                 else if (n.getNodeName() == "upnp:class") {
                     remove = false;
                 }
-
                 else if (n.getNodeName() == "upnp:albumArtURI") {
                     remove = false;
                 }
@@ -175,7 +177,7 @@ public class CustomTrack {
             transformer.transform(source, result);
             return result.getWriter().toString();
         } catch (Exception e) {
-            log.error("Erorr TidyMetaData", e);
+            LOG.error("Erorr TidyMetaData", e);
         }
 
         return "";
@@ -193,7 +195,7 @@ public class CustomTrack {
                 Node n = childs.item(i);
                 if (n.getNodeName() == "dc:title") {
                     n.setTextContent(full_title);
-                    log.info("ICY INFO Replacing dc:title: " + full_title);
+                    LOG.info("ICY INFO Replacing dc:title: " + full_title);
                     break;
                 }
             }
@@ -204,7 +206,7 @@ public class CustomTrack {
             metatext = result.getWriter().toString();
             return metatext;
         } catch (Exception e) {
-            log.error("Error Creating XML Doc", e);
+            LOG.error("Error Creating XML Doc", e);
         }
         return null;
     }
@@ -218,7 +220,7 @@ public class CustomTrack {
                 try {
                     word = word.replace(word.substring(1), word.substring(1).toLowerCase());
                 } catch (Exception e) {
-                    log.debug("Error with Word: " + word);
+                    LOG.debug("Error with Word: " + word);
                 }
                 string += word + " ";
             }
@@ -260,7 +262,7 @@ public class CustomTrack {
 
     @Override
     public String toString() {
-        String res = "Track Id: " + Id + " + URI: " + Uri + "  MetaData:\r\n " + getMetadata();
+        String res = "Track Id: " + id + " + URI: " + uri + "  MetaData:\r\n " + getMetadata();
         return res;
     }
 
@@ -268,7 +270,7 @@ public class CustomTrack {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource insrc = new InputSource(new StringReader(Metadata));
+            InputSource insrc = new InputSource(new StringReader(metadata));
             return builder.parse(insrc);
         } catch (Exception e) {
 
@@ -296,7 +298,7 @@ public class CustomTrack {
             String artist = xPath.compile(ex_artist).evaluate(doc);
             setArtist(artist);
         } catch (Exception e) {
-            log.error("Erorr TidyMetaData", e);
+            LOG.error("Erorr TidyMetaData", e);
         }
     }
 
@@ -308,11 +310,13 @@ public class CustomTrack {
             NodeList childs = item.getChildNodes();
             for (int i = 0; i < childs.getLength(); i++) {
                 Node n = childs.item(i);
-                if (n.getNodeName() == "dc:title") {
+                if ("dc:title".equals(n.getNodeName())) {
                     setTitle(n.getTextContent());
-                } else if (n.getNodeName() == "upnp:album") {
+                }
+                else if ("upnp:album".equals(n.getNodeName())) {
                     setAlbum(n.getTextContent());
-                } else if (n.getNodeName() == "upnp:artist") {
+                }
+                else if ("upnp:artist".equals(n.getNodeName())) {
                     NamedNodeMap map = n.getAttributes();
                     Node role = map.getNamedItem("role");
                     if (role != null) {
@@ -320,33 +324,32 @@ public class CustomTrack {
                         if (role_type.equalsIgnoreCase("AlbumArtist")) {
                             setArtist(n.getTextContent());
                         }
-                        if (role_type.equalsIgnoreCase("Performer")) {
+                        else if (role_type.equalsIgnoreCase("Performer")) {
                             setPerformer(n.getTextContent());
                         }
-                        if(role_type.equalsIgnoreCase("Composer"))
-                        {
+                        else if(role_type.equalsIgnoreCase("Composer")) {
                             setComposer(n.getTextContent());
                         }
-                        if(role_type.equalsIgnoreCase("Conductor"))
-                        {
+                        else if(role_type.equalsIgnoreCase("Conductor")) {
                             setConductor(n.getTextContent());
                         }
-
-                    }else
-                    {
+                    }
+                    else {
                         setArtist(n.getTextContent());
                     }
-                } else if (n.getNodeName() == "dc:date")
-                {
+                }
+                else if ("dc:date".equals(n.getNodeName())) {
                     setDate(n.getTextContent());
-                }else if (n.getNodeName() =="upnp:originalDiscNumber")
-                {
+                }
+                else if ("upnp:originalDiscNumber".equals(n.getNodeName())) {
                     disc_number = n.getTextContent();
                 }
+                else if ("upnp:albumArtURI".equals(n.getNodeName())) {
+                    setAlbumArtUri(n.getTextContent());
+                }
             }
-
         } catch (Exception e) {
-            log.error("Error GetTrackDetails", e);
+            LOG.error("Error GetTrackDetails", e);
         }
     }
 
@@ -492,6 +495,14 @@ public class CustomTrack {
         this.icy_reverse = icy_reverse;
     }
 
+    public String getAlbumArtUri() {
+        return albumArtUri;
+    }
+
+    public void setAlbumArtUri(String albumArtUri) {
+        this.albumArtUri = albumArtUri;
+    }
+
     // public void updateTitle(String title) {
     // // title = WordUtils.capitalizeFully(title);
     // String meta_data = Metadata;
@@ -503,11 +514,11 @@ public class CustomTrack {
     // if (start > 0) {
     // if (end > 0) {
     // String s = meta_data.substring(start, end);
-    // log.debug("Found Title: " + s);
-    // log.debug("Replace With: " + sStart + title);
+    // LOG.debug("Found Title: " + s);
+    // LOG.debug("Replace With: " + sStart + title);
     //
     // meta_data = meta_data.replace(s, sStart + title);
-    // log.debug(meta_data);
+    // LOG.debug(meta_data);
     // Metadata = meta_data;
     // }
     // }
@@ -525,11 +536,11 @@ public class CustomTrack {
     // if (start > 0) {
     // if (end > 0) {
     // String s = meta_data.substring(start, end);
-    // log.debug("Found Artist: " + s);
-    // log.debug("Replace With: " + sStart + title);
+    // LOG.debug("Found Artist: " + s);
+    // LOG.debug("Replace With: " + sStart + title);
     //
     // meta_data = meta_data.replace(s, sStart + title);
-    // log.debug(meta_data);
+    // LOG.debug(meta_data);
     // Metadata = meta_data;
     // }
     // } else {
