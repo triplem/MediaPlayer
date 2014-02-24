@@ -13,5 +13,6 @@ org.rpi.plugingateway
 org.rpi.providers
 org.rpi.radio
 org.rpi.radio.parsers
+org.rpi.songcast
 org.rpi.sources
 org.rpi.utils
