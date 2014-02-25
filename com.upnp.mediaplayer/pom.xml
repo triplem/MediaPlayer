@@ -15,6 +15,10 @@
     <url>http://triplem.github.io/triplem/MediaPlayer</url>
     <inceptionYear>2013</inceptionYear>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <developers>
         <developer>
             <id>phoyle</id>
@@ -56,6 +60,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
@@ -63,7 +68,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.4.1</version>
+                    <version>2.4.2</version>
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
@@ -168,7 +173,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.4</version>
                 <reportSets>
                     <reportSet>
                         <id>aggregate</id>
@@ -185,9 +190,6 @@
                 <artifactId>taglist-maven-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
-
-
-
 
         </plugins>
     </reporting>
@@ -308,6 +310,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <maven-wagon.version>2.6</maven-wagon.version>
+        <junit.version>4.11</junit.version>
 
         <github.global.server>github</github.global.server>
 
