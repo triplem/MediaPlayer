@@ -8,7 +8,7 @@
             <item name="Install on Raspberry PI" href="install_raspi.html"/>
             <item name="Build Instructions" href="build_instructions.html"/>
             <item name="MediaPlayer Config Options" href="config_options.html"/>
-            <item name="Radio Stations" href="radio_stations.md"/>
+            <item name="Radio Stations" href="radio_stations.html"/>
         </menu>
 
         <menu ref="modules" inherit="top"/>
@@ -16,7 +16,6 @@
         <menu ref="reports" inherit="bottom"/>
 
     </body>
-
 
     <skin>
         <groupId>org.apache.maven.skins</groupId>

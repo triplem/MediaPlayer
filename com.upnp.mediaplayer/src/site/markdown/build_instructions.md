@@ -1,15 +1,116 @@
-MediaPlayer uses ANT to build a zip with the latest release.
+MediaPlayer uses [Maven](http://maven.apache.org) to build the project.
 
-If you would like to create a release, you need to call the following command line inside the MediaPlayer/com.upnp.mediaplayer directory to build it:
+On this page, we are trying to show some use-cases and howto use Maven to solve those. Most of the stuff is pretty standard
+and should be known, if you know Maven already.
 
-``
-ant build_app
-``
+# Project-Structure
 
-This will clean up the build directory (target: clean), create all necessary directories (target: prepare) and compile the application (target: compile). The classes are then compiled into the directory build/classes.
+MediaPlayer uses a common multi-module approach. This means, that the master pom is contained in the root directory of
+the project, and all other modules are in separate folders beneath. The root directory does contain a src-folder where
+the site and its pages (e.g. the one you are looking at currently) are stored in.
 
-Then a JAR file for mediaplayer is created (target: build_jar) in the directory build/release/mediaplayer (its name is mediaplayer.jar).
+We use Markdown for these pages (see [Github Markdown Basics](https://help.github.com/articles/markdown-basics) for some
+hints, on how to use this.
 
-All necessary dependencies are then copied into the directory build/release/mediaplayer (including the native dependencies from the folder lib/native and the scripts inside lib/application) and a mediaplayer.zip file is put into the directory build/release.
+The [core-module](/MediaPlayer/mediaplayer/index.html) does provide the basic framework and the application for our project.
+All other modules are plugins, which do provide some interesting functionality, but do not have to be used. You can
+decide yourself, if you would like to download and install those.
 
-This ZIP-file can then be copied to your target System, unzipped in a directory of your choice and the run.sh inside the folder mediaplayer can then be executed, like described in [Install on Raspberry Pi](https://github.com/PeteManchester/MediaPlayer/wiki/Install-Raspberry-Pi).
+In the root-folder you will also find a repo sub-folder which contains some dependencies, which are not stored in a
+central Maven Repository in the Internet. These will hopefully get removed and will get stored in our own repository.
+
+# Maven settings
+
+To be able to deploy the site and/or releases to our own repositories, you will need to provide user credentials. Since
+those are specific for you, they are not provided inside the project pom, but in your local settings.xml, which you can
+find in ~/.m2 usually.
+
+The settings.xml should look something like the following:
+
+```
+<settings>
+  <servers>
+    <server>
+      <id>bintray</id>
+      <username>BINTRAY-USERNAME</username>
+      <password>BINTRAY-API-KEY</password>
+    </server>
+
+    <server>
+        <id>libs-releases</id>
+        <username>BINTRAY-USERNAME</username>
+        <password>BINTRAY-API-KEY</password>
+    </server>
+    <server>
+        <id>libs-snapshots</id>
+        <username>BINTRAY-USERNAME</username>
+        <password>BINTRAY-API-KEY</password>
+    </server>
+      <server>
+          <id>oss-jfrog-artifactory</id>
+          <username>BINTRAY-USERNAME</username>
+          <password>BINTRAY-API-KEY</password>
+      </server>
+
+      <server>
+          <id>github</id>
+          <username>GITHUB-USERNAME</username>
+          <password>GITHUB-PASSWORD</password>
+      </server>
+  </servers>
+</settings>
+
+```
+
+# Build the whole project
+
+To build the whole project, it is recommended to call the following command inside the root-folder of the project:
+
+```
+mvn clean install
+```
+
+This will generate all necessary jar-files for the project. All dependencies are downloaded from the Maven Repository or
+are fetched from our local repository (the already mentioned repo sub-folder).
+
+If you would like to do some debugging with specific debugging settings (eg. loglevel debug), then you can call the above
+command with the ```debug``` profile:
+
+```
+mvn clean install -Pdebug
+```
+
+The provided properties can be easily adopted inside of the master pom.xml in the root directory of the project.
+
+# Publish the project site
+
+Maven allows us to provide a project site. This page is based on several reports, which Maven provides from itself.
+Furthermore, we added some pages (like this one) in the Markdown-Format. These will get transferred to HTML and can be
+viewed then via any browser.
+
+The page can get generated and published with the following command:
+
+```
+mvn site:site site:attach-descriptor site:stage scm-publish:publish-scm
+```
+
+Please note, that you do have to provide some user credentials to publish the site. These credentials should be provided
+in your local settings.xml file, like explained above. You can test the whole site-generation, by just providing the
+command
+
+```
+mvn site:site site:attach-descriptor site:stage
+```
+
+You will then find the generated site in the target/staging-folder of the root-project folder.
+
+# Create a release
+
+When creating a release, a new version of the project is created. While during the usual development the project version
+ends on -SNAPSHOT, a release version does not contain this addendum.
+
+A release can be created with the following commands:
+
+```
+
+```
