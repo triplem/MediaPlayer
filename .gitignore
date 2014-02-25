@@ -9,3 +9,7 @@ target/
 *.pyc
 .idea/
 mediaplayer.log
+.classpath
+.project
+.settings
+

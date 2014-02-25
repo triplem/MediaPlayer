@@ -104,7 +104,29 @@ mvn site:site site:attach-descriptor site:stage
 
 You will then find the generated site in the target/staging-folder of the root-project folder.
 
+# Integrate with your IDE
+
+In the project root folder, please call
+
+```
+mvn eclipse:eclipse
+```
+
+if you are using Eclipse. It is recommended to install m2eclipse into your Eclipse Install as well, then the whole
+Maven Integration is more tight and easier to use.
+
+To debug the application, start it with
+
+```
+mvnDebug clean install exec:java -Pdebug
+```
+
+and connect Eclipse to the port 8000 (remote debugging). If you have installed m2eclipse, your breakpoints should be
+shown in the editor, as soon as the execution reaches it.
+
 # Create a release
+
+CAUTION: THIS IS NOT WORKING RIGHT NOW, BECAUSE OF A BUG IN MAVEN AND/OR GIT....
 
 When creating a release, a new version of the project is created. While during the usual development the project version
 ends on -SNAPSHOT, a release version does not contain this addendum.
