@@ -109,8 +109,24 @@ You will then find the generated site in the target/staging-folder of the root-p
 When creating a release, a new version of the project is created. While during the usual development the project version
 ends on -SNAPSHOT, a release version does not contain this addendum.
 
-A release can be created with the following commands:
+A release can be created with the following command:
 
 ```
+mvn release:prepare
+```
+
+You need to provide the new release version as well as the version after the release. This is very easy, in that you only
+need to press enter to use the default values :-).
+
+Next you need to perform the real release:
 
 ```
+mvn release:perform
+```
+
+Note, that this step can take some time, since the whole repository is cloned.
+
+After this, the site should be published for the created release, this can be done with the following commands:
+
+
+
