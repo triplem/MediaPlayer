@@ -134,14 +134,3 @@ git tag -d tagname
 ```
 
 In the above command, a tagname can be something like ```mediaplayer-master-0.0.4```.
-
-Unfortunately there seems to be a bug (see https://jira.codehaus.org/browse/SCM-740). Therefor, we need to do the following,
-until this is resolved.
-
-```
-git config --add status.displayCommentPrefix true
-export LANG=C
-```
-
-
-
