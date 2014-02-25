@@ -237,9 +237,9 @@
 
     <distributionManagement>
         <repository>
-            <id>oss-jfrog-artifactory</id>
-            <name>oss-jfrog-artifactory-releases</name>
-            <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+            <id>bintray</id>
+            <name>triplem-MediaPlayer-mediaplayer</name>
+            <url>https://api.bintray.com/maven/triplem/MediaPlayer/mediaplayer</url>
         </repository>
         <snapshotRepository>
             <id>oss-jfrog-artifactory</id>
@@ -247,6 +247,8 @@
             <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
         </snapshotRepository>
         <site>
+            <!-- this is just a temp folder to avoid deployment using the usual "site:deploy" goal, since we are deploying
+                 gh-pages using scm-publish:publish-scm-->
             <id>github</id>
             <url>file://${site-docs.url}</url>
         </site>

@@ -126,7 +126,13 @@ mvn release:perform
 
 Note, that this step can take some time, since the whole repository is cloned.
 
-After this, the site should be published for the created release, this can be done with the following commands:
+There are some commands, which can be useful, if the release does not work out properly:
 
+```
+mvn release:rollback
+git tag -d tagname
+```
+
+In the above command, a tagname can be something like ```mediaplayer-master-0.0.4```.
 
 
