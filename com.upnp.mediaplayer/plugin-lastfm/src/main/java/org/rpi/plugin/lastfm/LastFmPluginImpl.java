@@ -8,9 +8,7 @@ package org.rpi.plugin.lastfm;
  */
 
 import java.io.File;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.SocketAddress;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -195,12 +193,23 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         try {
             String class_name = this.getClass().getName();
             log.debug("Find Class, ClassName: " + class_name);
+
             String path = OSManager.getInstance().getFilePath(this.getClass(), false);
+            File file = new File(path + "LastFM.xml");
+
+            URI resourceURI = null;
+            if (!file.exists()) {
+                URL resource = this.getClass().getResource("LastFM.xml");
+                resourceURI = resource.toURI();
+            } else {
+                resourceURI = file.toURI();
+            }
+
             log.debug("Getting LastFM.xml from Directory: " + path);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            File file = new File(path + "LastFM.xml");
-            Document doc = builder.parse(file);
+
+            Document doc = builder.parse(resourceURI.toString());
             NodeList listOfConfig = doc.getElementsByTagName("Config");
             int i = 1;
             String encrypted_password = "";

@@ -77,7 +77,6 @@ public class StartMe {
 				log.error(e.getMessage(), e);
 			}
 		}
-
 		else {
 			while (!stop) {
 				try {
