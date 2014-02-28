@@ -18,7 +18,7 @@ import org.rpi.player.events.EventRadioStatusChanged;
 import org.rpi.radio.CustomChannel;
 import org.rpi.utils.Utils;
 
-public class PrvRadio extends DvProviderAvOpenhomeOrgRadio1 implements Observer {
+public class PrvRadio extends DvProviderAvOpenhomeOrgRadio1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvRadio.class);
 
@@ -320,6 +320,10 @@ public class PrvRadio extends DvProviderAvOpenhomeOrgRadio1 implements Observer 
 		}
 	}
 
+    @Override
+    public String getName() {
+        return "Radio";
+    }
 
 
 }

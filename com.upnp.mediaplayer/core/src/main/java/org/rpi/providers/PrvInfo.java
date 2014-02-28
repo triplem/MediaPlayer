@@ -16,7 +16,7 @@ import org.rpi.player.events.EventUpdateTrackMetaText;
 import org.rpi.playlist.CustomTrack;
 import org.rpi.utils.Utils;
 
-public class PrvInfo extends DvProviderAvOpenhomeOrgInfo1 implements Observer {
+public class PrvInfo extends DvProviderAvOpenhomeOrgInfo1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvInfo.class);
 	
@@ -196,4 +196,8 @@ public class PrvInfo extends DvProviderAvOpenhomeOrgInfo1 implements Observer {
 		
 	}
 
+    @Override
+    public String getName() {
+        return "Info";
+    }
 }

@@ -15,7 +15,7 @@ import org.rpi.player.events.EventStandbyChanged;
 import org.rpi.plugingateway.PluginGateWay;
 import org.rpi.utils.Utils;
 
-public class PrvProduct extends DvProviderAvOpenhomeOrgProduct1 implements Observer {
+public class PrvProduct extends DvProviderAvOpenhomeOrgProduct1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvProduct.class);
 	private String friendly_name = Config.friendly_name;
@@ -309,4 +309,9 @@ public class PrvProduct extends DvProviderAvOpenhomeOrgProduct1 implements Obser
 		}
 		
 	}
+
+    @Override
+    public String getName() {
+        return "Product";
+    }
 }

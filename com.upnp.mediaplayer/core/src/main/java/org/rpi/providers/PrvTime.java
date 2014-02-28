@@ -13,7 +13,7 @@ import org.rpi.player.events.EventDurationUpdate;
 import org.rpi.player.events.EventTimeUpdate;
 import org.rpi.utils.Utils;
 
-public class PrvTime extends DvProviderAvOpenhomeOrgTime1 implements Observer {
+public class PrvTime extends DvProviderAvOpenhomeOrgTime1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvTime.class);
 
@@ -83,5 +83,10 @@ public class PrvTime extends DvProviderAvOpenhomeOrgTime1 implements Observer {
 		}
 
 	}
+
+    @Override
+    public String getName() {
+        return "Time";
+    }
 
 }

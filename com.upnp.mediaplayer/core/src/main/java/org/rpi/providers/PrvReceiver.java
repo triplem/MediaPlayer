@@ -9,7 +9,7 @@ import org.rpi.playlist.CustomTrack;
 import org.rpi.songcast.OHZManager;
 import org.rpi.utils.Utils;
 
-public class PrvReceiver extends DvProviderAvOpenhomeOrgReceiver1 {
+public class PrvReceiver extends DvProviderAvOpenhomeOrgReceiver1 implements IDisposableDevice {
 
     private Logger log = Logger.getLogger(PrvReceiver.class);
     private boolean bPlay = false;
@@ -104,6 +104,10 @@ public class PrvReceiver extends DvProviderAvOpenhomeOrgReceiver1 {
         return getPropertyTransportState();
     }
 
+    @Override
+    public String getName() {
+        return "Receiver";
+    }
 
 
 }

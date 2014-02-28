@@ -21,7 +21,7 @@ import org.rpi.playlist.PlayListReader;
 import org.rpi.playlist.PlayListWriter;
 import org.rpi.utils.Utils;
 
-public class PrvPlayList extends DvProviderAvOpenhomeOrgPlaylist1 implements Observer {
+public class PrvPlayList extends DvProviderAvOpenhomeOrgPlaylist1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvPlayList.class);
 	private int next_id;
@@ -441,5 +441,10 @@ public class PrvPlayList extends DvProviderAvOpenhomeOrgPlaylist1 implements Obs
 		}
 
 	}
+
+    @Override
+    public String getName() {
+        return "PlayList";
+    }
 
 }

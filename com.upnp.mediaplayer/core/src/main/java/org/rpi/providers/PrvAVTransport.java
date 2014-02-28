@@ -16,7 +16,7 @@ import org.rpi.player.events.EventUpdateTrackInfo;
 import org.rpi.playlist.CustomTrack;
 import org.rpi.utils.Utils;
 
-public class PrvAVTransport extends DvProviderUpnpOrgAVTransport1 implements Observer {
+public class PrvAVTransport extends DvProviderUpnpOrgAVTransport1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvAVTransport.class);
 	private String track_uri = "";
@@ -430,5 +430,10 @@ public class PrvAVTransport extends DvProviderUpnpOrgAVTransport1 implements Obs
 		}
 		return sb.toString();
 	}
+
+    @Override
+    public String getName() {
+        return "AVTransport";
+    }
 
 }

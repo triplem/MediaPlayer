@@ -14,7 +14,7 @@ import org.rpi.player.events.EventMuteChanged;
 import org.rpi.player.events.EventVolumeChanged;
 import org.rpi.utils.Utils;
 
-public class PrvRenderingControl extends DvProviderUpnpOrgRenderingControl1 implements Observer {
+public class PrvRenderingControl extends DvProviderUpnpOrgRenderingControl1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvRenderingControl.class);
 	private String isMute = "0";
@@ -412,5 +412,10 @@ public class PrvRenderingControl extends DvProviderUpnpOrgRenderingControl1 impl
 		if (value < 0 || value > 100)
 			throw new ActionError("Specified Value: " + value + " Must be &lt;= 100");		
 	}
+
+    @Override
+    public String getName() {
+        return "RenderingControl";
+    }
 
 }

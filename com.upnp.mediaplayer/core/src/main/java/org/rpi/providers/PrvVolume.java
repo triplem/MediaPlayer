@@ -13,7 +13,7 @@ import org.rpi.player.events.EventMuteChanged;
 import org.rpi.player.events.EventVolumeChanged;
 import org.rpi.utils.Utils;
 
-public class PrvVolume extends DvProviderAvOpenhomeOrgVolume1 implements Observer {
+public class PrvVolume extends DvProviderAvOpenhomeOrgVolume1 implements Observer, IDisposableDevice {
 
 	private Logger log = Logger.getLogger(PrvVolume.class);
 
@@ -152,4 +152,9 @@ public class PrvVolume extends DvProviderAvOpenhomeOrgVolume1 implements Observe
 			break;
 		}
 	}
+
+    @Override
+    public String getName() {
+        return "Volume";
+    }
 }
