@@ -36,6 +36,7 @@ import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventTrackChanged;
 import org.rpi.player.events.EventUpdateTrackMetaText;
 import org.rpi.playlist.CustomTrack;
+import org.rpi.utils.Utils;
 import org.rpi.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -83,7 +84,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         log.info("Init LastFmPluginImpl");
         getConfig();
         init();
-        PlayManager.getInstance().observInfoEvents(this);
+        PlayManager.getInstance().observeInfoEvents(this);
         PlayManager.getInstance().observeProductEvents(this);
         log.info("Finished LastFmPluginImpl");
     }
@@ -149,7 +150,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         data.setTimestamp(now);
         data.setArtist(artist);
         data.setTrack(title);
-        if (!isEmpty(album)) {
+        if (!Utils.isEmpty(album)) {
             data.setAlbum(album);
         }
         ScrobbleResult sres = Track.scrobble(data, session);
@@ -287,14 +288,6 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
                 return;
             }
         n.appendChild(doc.createTextNode(def));
-    }
-
-    public boolean isEmpty(String string) {
-        if (string == null || string.equals("") || string.length() == 0) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
