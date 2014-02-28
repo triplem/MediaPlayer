@@ -1,17 +1,13 @@
 package org.rpi.songcast;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
 
 class UDPSender implements Runnable {
 
@@ -21,11 +17,12 @@ class UDPSender implements Runnable {
 
     private int mcastPort = 0;
     private InetAddress mcastAddr = null;
-    // private InetAddress localHost = null;
     private String zoneID = "";
     private Vector mWorkQueue = new Vector();
+    private String nic = "";
 
-    UDPSender(int port, InetAddress addr, String zoneID) {
+    UDPSender(int port, InetAddress addr, String zoneID,String nic) {
+        this.nic = nic;
         mcastPort = port;
         mcastAddr = addr;
         this.zoneID = zoneID;
@@ -33,25 +30,15 @@ class UDPSender implements Runnable {
         try {
             mSocket = new MulticastSocket(port);
             mSocket.setReuseAddress(true);
-            InetAddress inet = InetAddress.getByName("192.168.1.72");
-            NetworkInterface netIf = NetworkInterface.getByInetAddress(inet);
+            //InetAddress inet = InetAddress.getByName("192.168.1.72");
+            NetworkInterface netIf = NetworkInterface.getByName(nic);
             mSocket.setNetworkInterface(netIf);
             mSocket.setSoTimeout(5000);
             NetworkInterface ifs = mSocket.getNetworkInterface();
             log.debug("Receiver NetworkInterface: " + ifs.getDisplayName());
-            //dgramSocket.setReuseAddress(true);
-            //InetSocketAddress bindAddress =  new InetSocketAddress("192.168.1.72",port);
-            //dgramSocket.bind(bindAddress);
         } catch (IOException ioe) {
             log.error("problems creating the datagram socket.", ioe);
         }
-        // try {
-        // //TODO Set own IPAddress
-        // localHost = InetAddress.getByName("192.168.1.72");
-        //
-        // } catch (UnknownHostException uhe) {
-        // log.error("Problems identifying local host",uhe);
-        // }
     }
 
     public synchronized boolean isEmpty() {
