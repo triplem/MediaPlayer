@@ -1,8 +1,15 @@
 package org.rpi.songcast;
 
-public class SongcastMessage {
+import java.io.UnsupportedEncodingException;
+import java.util.Observable;
+
+import org.rpi.player.events.EventBase;
+import org.rpi.songcast.events.EventSongCastBase;
+
+public class SongcastMessage extends Observable {
 
     public byte[] data = null;
+
 
     public String convertHexToString(String hex) {
 
@@ -72,23 +79,81 @@ public class SongcastMessage {
         return res;
     }
 
+    public byte[] shortToByteArray(short data) {
+        return new byte[]{(byte) (data & 0xff), (byte) ((data >>> 8) & 0xff)};
+    }
+
+//	public int byteArrayShortToInt(byte[] b) 
+//	{
+//				
+//	    int value = 0;
+//	    for (int i = 0; i < 2; i++) {
+//	        int shift = (2 - 1 - i) * 8;
+//	        value += (b[i] & 0x000000FF) << shift;
+//	    }
+//	    return value;
+//	}
+
+
     public int byteArrayToInt(byte[] b)
     {
+        return byteArrayToInt(b,4);
+    }
+
+    public int byteArrayToInt(byte[] b,int size)
+    {
+//		if(b.length<4)
+//		{
+//			byte[] temp = new byte[4];
+//			int size = b.length ;
+//			int iCount = 4-size;
+//			int iArray = 0;
+//			for(int add = iCount;add < 4;add++)
+//			{
+//				if(iCount>add)
+//				{
+//				temp[add] = 0x00;
+//				}
+//				else
+//				{
+//					temp[add ] = b[ iArray];
+//					iArray++;
+//				}
+//			}
+//			b = temp;
+//		}
+
         int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
+        for (int i = 0; i < size; i++) {
+            int shift = (size - 1 - i) * 8;
             value += (b[i] & 0x000000FF) << shift;
         }
         return value;
     }
 
-    public String byteArrayToString(byte[] bytes)
+    public String byteToHexString(byte[] bytes)
     {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
             sb.append(String.format("%02X ", b));
         }
         return sb.toString();
+    }
+
+    public String byteToString(byte[] bytes)
+    {
+        String s = "";
+        try {
+            s=  new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+
+        }
+        return s;
+    }
+
+    public void fireEvent(EventSongCastBase ev) {
+        setChanged();
+        notifyObservers(ev);
     }
 
 }
