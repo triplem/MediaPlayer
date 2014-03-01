@@ -16,9 +16,9 @@
             <destName>LastFM.jar</destName>
         </file>
         <file>
-            <source>src/main/resources/org/rpi/plugin/lastfm/LastFM.xml</source>
-            <outputDirectory>/plugins/org/rpi/plugin/lastfm</outputDirectory>
-            <destName>lastfm.properties</destName>
+            <source>src/main/resources/LastFM.xml</source>
+            <outputDirectory>/plugins</outputDirectory>
+            <destName>LastFM.xml</destName>
         </file>
 
     </files>
