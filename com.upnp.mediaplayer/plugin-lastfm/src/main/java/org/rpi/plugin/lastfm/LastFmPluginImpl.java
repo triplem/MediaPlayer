@@ -71,8 +71,13 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     private Proxy.Type lastfm_proxymode = Proxy.Type.DIRECT;
     private String lastfm_proxy_ip = null;
     private Integer lastfm_proxy_port = null;
+
     private String title = "";
     private String artist = "";
+    private String last_scrobbled_title = "";
+    private String last_scrobbled_artist = "";
+    private String last_scrobbled_album = "";
+
     private List<BlackList> blackList = new ArrayList<BlackList>();
 
     private static Session session =null;
@@ -137,6 +142,15 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
             return;
         }
 
+        if(last_scrobbled_title.equalsIgnoreCase(title) && last_scrobbled_artist.equalsIgnoreCase(artist))
+        {
+            if(album.equalsIgnoreCase(album))
+            {
+                log.debug("Repeat of Last Scrobble, do not Scrobble. Title: " + title + " Artist: " + artist + " Album: " + album );
+                return;
+            }
+        }
+
         for (BlackList bl : blackList) {
             if (bl.matches(artist, title)) {
                 log.debug("BlackList Found Title: " + title + " : Artist: " + artist + "Rule: " + bl.toString());
@@ -157,6 +171,11 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         if (!sres.isSuccessful()|| sres.isIgnored())
         {
             log.debug(sres.toString());
+        }
+        else {
+            last_scrobbled_title = title;
+            last_scrobbled_artist = artist;
+            last_scrobbled_album = album;
         }
     }
 
@@ -206,22 +225,22 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
                 Node config = listOfConfig.item(s);
                 if (config.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) config;
-                    lastfm_username = XMLUtils.getElementTest(element, "UserName");
+                    lastfm_username = XMLUtils.getStringFromElement(element, "UserName");
                     String password = "";
-                    password = XMLUtils.getElementTest(element, "Password");
+                    password = XMLUtils.getStringFromElement(element, "Password");
                     if (!password.equalsIgnoreCase("")) {
                         encrypted_password = encrypt(key, password);
                         lastfm_password = password;
                     } else {
-                        String enc_password = XMLUtils.getElementTest(element, "Password_ENC");
+                        String enc_password = XMLUtils.getStringFromElement(element, "Password_ENC");
                         if (!enc_password.equalsIgnoreCase("")) {
                             lastfm_password = decrypt(key, enc_password);
                         }
                     }
-                    String proxymode = XMLUtils.getElementTest(element, "ProxyType", "DIRECT");
+                    String proxymode = XMLUtils.getStringFromElement(element, "ProxyType", "DIRECT");
                     lastfm_proxymode = Proxy.Type.valueOf(proxymode);
-                    lastfm_proxy_ip = XMLUtils.getElementTest(element, "Proxy_IP");
-                    String proxy_port = XMLUtils.getElementTest(element, "Proxy_Port", "-1");
+                    lastfm_proxy_ip = XMLUtils.getStringFromElement(element, "Proxy_IP");
+                    String proxy_port = XMLUtils.getStringFromElement(element, "Proxy_Port", "-1");
                     lastfm_proxy_port = Integer.parseInt(proxy_port);
                 }
             }
@@ -231,8 +250,8 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
                 Node bl = listOfBlackList.item(s);
                 if (bl.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) bl;
-                    String artist = XMLUtils.getElementTest(element, "artist", "");
-                    String title = XMLUtils.getElementTest(element, "title", "");
+                    String artist = XMLUtils.getStringFromElement(element, "artist", "");
+                    String title = XMLUtils.getStringFromElement(element, "title", "");
                     BlackList bli = new BlackList();
                     bli.setArtist(artist);
                     bli.setTitle(title);

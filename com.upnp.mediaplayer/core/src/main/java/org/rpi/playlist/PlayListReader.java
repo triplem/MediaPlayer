@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.rpi.playlist.CustomTrack;
+
 import org.apache.log4j.Logger;
 import org.rpi.providers.PrvPlayList;
 import org.rpi.utils.XMLUtils;
@@ -39,14 +39,14 @@ public class PlayListReader {
             for (int s = 0; s < listOfChannels.getLength(); s++) {
                 Node channel = listOfChannels.item(s);
                 Element element = (Element) channel;
-                String id = XMLUtils.getElementTest(element, "Id");
+                String id = XMLUtils.getStringFromElement(element, "Id");
                 int iId = Integer.parseInt(id);
                 if(iId > max_id)
                 {
                     max_id = iId;
                 }
-                String url = XMLUtils.getElementTest(element, "Uri");
-                String metadata = XMLUtils.getElementTest(element, "Metadata");
+                String url = XMLUtils.getStringFromElement(element, "Uri");
+                String metadata = XMLUtils.getStringFromElement(element, "Metadata");
                 CustomTrack t = new CustomTrack(url, metadata, Integer.parseInt(id));
                 tracks.add(t);
                 log.debug("Adding Track Id: " + id + " URL: " + url +  " " + t.getFullDetails());
