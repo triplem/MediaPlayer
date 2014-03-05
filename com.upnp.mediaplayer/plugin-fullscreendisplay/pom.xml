@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The Basics -->
+    <parent>
+        <groupId>org.rpi</groupId>
+        <artifactId>mediaplayer-master</artifactId>
+        <version>0.0.7-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>Display-plugin</artifactId>
+    <packaging>jar</packaging>
+
+    <!-- More Project Information -->
+    <name>MediaPlayer Plugin Display Integration</name>
+    <description>Allows to show AlbumInformation using java fullscreen mode (without using X)</description>
+
+    <properties>
+        <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}/staging</scm-publish.siteDocOuputDirectory>
+    </properties>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jar</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}</finalName>
+                            <descriptors>
+                                <descriptor>
+                                    src/main/assembly/jar.xml
+                                </descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+<!--
+                    <execution>
+                        <id>zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}</finalName>
+                            <descriptors>
+                                <descriptor>
+                                    src/main/assembly/zip.xml
+                                </descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+-->
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <mediaplayer.core.home>${basedir}/../core/src/main/assembly</mediaplayer.core.home>
+                    </systemPropertyVariables>
+                </configuration>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.rpi.main.StartMe</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>mediaplayer.core.home</key>
+                            <value>${basedir}/../core/src/main/assembly</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.rpi</groupId>
+            <artifactId>mediaplayer</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
