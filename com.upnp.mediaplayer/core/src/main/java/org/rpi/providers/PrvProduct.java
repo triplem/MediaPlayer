@@ -1,9 +1,5 @@
 package org.rpi.providers;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.apache.log4j.Logger;
 import org.openhome.net.device.DvDevice;
 import org.openhome.net.device.IDvInvocation;
@@ -14,6 +10,10 @@ import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventStandbyChanged;
 import org.rpi.plugingateway.PluginGateWay;
 import org.rpi.utils.Utils;
+
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PrvProduct extends DvProviderAvOpenhomeOrgProduct1 implements Observer, IDisposableDevice {
 

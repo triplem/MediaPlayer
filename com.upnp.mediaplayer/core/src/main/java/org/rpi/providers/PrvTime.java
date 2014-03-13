@@ -1,8 +1,5 @@
 package org.rpi.providers;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import org.apache.log4j.Logger;
 import org.openhome.net.device.DvDevice;
 import org.openhome.net.device.IDvInvocation;
@@ -12,6 +9,9 @@ import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventDurationUpdate;
 import org.rpi.player.events.EventTimeUpdate;
 import org.rpi.utils.Utils;
+
+import java.util.Observable;
+import java.util.Observer;
 
 public class PrvTime extends DvProviderAvOpenhomeOrgTime1 implements Observer, IDisposableDevice {
 

@@ -1,33 +1,10 @@
 package org.rpi.main;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-
 import org.apache.log4j.Logger;
-import org.openhome.net.core.DebugLevel;
-import org.openhome.net.core.DeviceStack;
-import org.openhome.net.core.IMessageListener;
-import org.openhome.net.core.InitParams;
-import org.openhome.net.core.Library;
-import org.openhome.net.device.DvDevice;
-import org.openhome.net.device.DvDeviceFactory;
-import org.openhome.net.device.IDvDeviceListener;
-import org.openhome.net.device.IResourceManager;
-import org.openhome.net.device.IResourceWriter;
+import org.openhome.net.core.*;
+import org.openhome.net.device.*;
 import org.rpi.config.Config;
+import org.rpi.http.HttpServerGrizzly;
 import org.rpi.os.OSManager;
 import org.rpi.player.PlayManager;
 import org.rpi.plugingateway.PluginGateWay;
@@ -36,6 +13,19 @@ import org.rpi.radio.ChannelReader;
 import org.rpi.sources.Source;
 import org.rpi.sources.SourceReader;
 import org.rpi.utils.NetworkUtils;
+
+
+
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleDevice implements IResourceManager, IDvDeviceListener, IMessageListener {
 
@@ -53,6 +43,7 @@ public class SimpleDevice implements IResourceManager, IDvDeviceListener, IMessa
 	private PrvReceiver iReceiver = null;
 	private PrvAVTransport iAVTransport = null;
 	private PrvRenderingControl iRenderingControl = null;
+	private HttpServerGrizzly httpServer = null;
 
 	private PlayManager iPlayer = PlayManager.getInstance();
 
@@ -156,6 +147,7 @@ public class SimpleDevice implements IResourceManager, IDvDeviceListener, IMessa
 		iDevice.setEnabled();
 		log.debug("Device Enabled UDN: " + iDevice.getUdn());
 		iProduct.setSourceByname("PlayList");
+		httpServer = new HttpServerGrizzly(Config.webHttpPort);
 		OSManager.getInstance().loadPlugins();
 	}
 
@@ -260,6 +252,18 @@ public class SimpleDevice implements IResourceManager, IDvDeviceListener, IMessa
 	}
 
 	public void dispose() {
+		
+		try
+		{
+			if(httpServer !=null)
+			{
+				httpServer.shutdown();
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("Error Stopping HTTP Server:", e);
+		}
 
 		try {
 			OSManager.getInstance().dispose();

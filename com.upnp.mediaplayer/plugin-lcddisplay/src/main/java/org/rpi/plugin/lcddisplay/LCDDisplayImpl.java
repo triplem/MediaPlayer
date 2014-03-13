@@ -14,11 +14,18 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.events.Shutdown;
 
 import org.apache.log4j.Logger;
+import org.rpi.channel.ChannelBase;
+import org.rpi.channel.ChannelPlayList;
 import org.rpi.os.OSManager;
 import org.rpi.player.PlayManager;
-import org.rpi.player.events.*;
+import org.rpi.player.events.EventBase;
+import org.rpi.player.events.EventMuteChanged;
+import org.rpi.player.events.EventStandbyChanged;
+import org.rpi.player.events.EventTimeUpdate;
+import org.rpi.player.events.EventTrackChanged;
+import org.rpi.player.events.EventUpdateTrackMetaText;
+import org.rpi.player.events.EventVolumeChanged;
 import org.rpi.player.observers.ObservableVolume;
-import org.rpi.playlist.CustomTrack;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -120,7 +127,7 @@ public class LCDDisplayImpl implements LCDDislayInterface, Observer {
 		switch (base.getType()) {
 		case EVENTTRACKCHANGED:
 			EventTrackChanged etc = (EventTrackChanged) e;
-			CustomTrack track = etc.getTrack();
+			ChannelBase track = etc.getTrack();
 			if (track != null) {
 				String s = track.getFullDetails();
 				log.debug("TrackChanged: " + s);
@@ -129,7 +136,7 @@ public class LCDDisplayImpl implements LCDDislayInterface, Observer {
 				scroller.updateValues("[ARTIST]", track.getArtist());
 				scroller.updateValues("[TITLE]", track.getTitle());
 				scroller.updateValues("[ALBUM]", track.getAlbum());
-                scroller.updateValues("[PERFORMER]", track.getPerformer());
+				scroller.updateValues("[PERFORMER]", track.getPerformer());
 				scroller.updateValues("[COMPOSER]", track.getComposer());
 				scroller.updateValues("[CONDUCTOR]", track.getConductor());
 				scroller.updateValues("[DATE]", track.getDate());

@@ -30,12 +30,13 @@ import javax.xml.transform.stream.StreamResult;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import org.apache.log4j.Logger;
+import org.rpi.channel.ChannelBase;
+import org.rpi.channel.ChannelPlayList;
 import org.rpi.os.OSManager;
 import org.rpi.player.PlayManager;
 import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventTrackChanged;
 import org.rpi.player.events.EventUpdateTrackMetaText;
-import org.rpi.playlist.CustomTrack;
 import org.rpi.utils.Utils;
 import org.rpi.utils.XMLUtils;
 import org.w3c.dom.Document;
@@ -71,13 +72,13 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
     private Proxy.Type lastfm_proxymode = Proxy.Type.DIRECT;
     private String lastfm_proxy_ip = null;
     private Integer lastfm_proxy_port = null;
-
+    
     private String title = "";
     private String artist = "";
     private String last_scrobbled_title = "";
     private String last_scrobbled_artist = "";
     private String last_scrobbled_album = "";
-
+    
     private List<BlackList> blackList = new ArrayList<BlackList>();
 
     private static Session session =null;
@@ -100,7 +101,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         switch (base.getType()) {
             case EVENTTRACKCHANGED:
                 EventTrackChanged etc = (EventTrackChanged) e;
-                CustomTrack track = etc.getTrack();
+                ChannelBase track = etc.getTrack();
                 if (track != null) {
                     scrobble(track.getTitle(), track.getPerformer(), track.getAlbum());
                 } else {
@@ -140,16 +141,17 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         if (title.equalsIgnoreCase("") || artist.equalsIgnoreCase("")) {
             log.debug("One is a blank Title: " + title + " Artist: " + artist);
             return;
-        }
-
+        }  
+        
         if(last_scrobbled_title.equalsIgnoreCase(title) && last_scrobbled_artist.equalsIgnoreCase(artist))
         {
-            if(album.equalsIgnoreCase(album))
-            {
-                log.debug("Repeat of Last Scrobble, do not Scrobble. Title: " + title + " Artist: " + artist + " Album: " + album );
-                return;
-            }
+        	if(album.equalsIgnoreCase(album))
+        	{
+        		log.debug("Repeat of Last Scrobble, do not Scrobble. Title: " + title + " Artist: " + artist + " Album: " + album );
+        		return;
+        	}
         }
+        
 
         for (BlackList bl : blackList) {
             if (bl.matches(artist, title)) {
@@ -172,10 +174,11 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
         {
             log.debug(sres.toString());
         }
-        else {
-            last_scrobbled_title = title;
-            last_scrobbled_artist = artist;
-            last_scrobbled_album = album;
+        else
+        {
+        	last_scrobbled_title = title;
+        	last_scrobbled_artist = artist;
+        	last_scrobbled_album = album;
         }
     }
 
@@ -200,7 +203,7 @@ public class LastFmPluginImpl implements LastFmPluginInterface, Observer {
                 log.debug("SessionKey: " + session.getKey());
             }
         } catch (Exception e) {
-            log.error("An error occured during initialization of the lastfm connection", e);
+          	log.error("An error occured during initialization of the lastfm connection", e);
         }
         log.debug("End of INIT");
     }

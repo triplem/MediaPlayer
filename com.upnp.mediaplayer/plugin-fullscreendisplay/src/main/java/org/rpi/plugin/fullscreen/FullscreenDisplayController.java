@@ -1,17 +1,11 @@
 package org.rpi.plugin.fullscreen;
 
 import org.apache.log4j.Logger;
-import org.rpi.player.PlayManager;
-import org.rpi.player.events.EventBase;
-import org.rpi.player.events.EventTrackChanged;
-import org.rpi.player.events.EventUpdateTrackMetaText;
-import org.rpi.playlist.CustomTrack;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Observable;
-import java.util.Observer;
+import java.io.IOException;
 
 /**
  *
@@ -38,19 +32,23 @@ public class FullscreenDisplayController implements PropertyChangeListener {
 
         System.out.println("PropertyName: " + propertyName);
         if (propertyName.equals("albumTitle")) {
-            view.getAlbumPanel().stopScrolling();
-            view.getAlbumPanel().getLabel().setText(newValue);
-            view.getAlbumPanel().startScrolling();
+            view.getAlbumPanel().setText(newValue);
         }
         else if (propertyName.equals("artist")) {
-            view.getArtistPanel().stopScrolling();
-            view.getArtistPanel().getLabel().setText(newValue);
-            view.getArtistPanel().startScrolling();
+            view.getArtistPanel().setText(newValue);
         }
         else if (propertyName.equals("trackTitle")) {
-            view.getTrackPanel().stopScrolling();
-            view.getTrackPanel().getLabel().setText(newValue);
-            view.getTrackPanel().startScrolling();
+            view.getTrackPanel().setText(newValue);
+        }
+        else if (propertyName.equals("trackDuration")) {
+            view.getTrackDurationLabel().setText(newValue);
+        }
+        else if (propertyName.equals("imageURI")) {
+            try {
+                view.setImage(newValue);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package org.rpi.main;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -12,12 +11,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeSet;
-
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Mixer;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.RollingFileAppender;
 import org.rpi.config.Config;
 import org.rpi.log.CustomPatternLayout;
+import org.rpi.utils.Utils;
+
 
 public class StartMe {
 
@@ -40,15 +42,19 @@ public class StartMe {
 			}
 		}
 		getConfig();
-		configureLogging();
+		ConfigureLogging();
 		log.info("Starting......");
+		if (!Utils.isEmpty(Config.songcastSoundCardName)) {
+			setAudioDevice();
+		}
 		try {
 			log.info("Getting Network Interfaces");
 			Enumeration e = NetworkInterface.getNetworkInterfaces();
 			while (e.hasMoreElements()) {
 				NetworkInterface n = (NetworkInterface) e.nextElement();
 				Enumeration ee = n.getInetAddresses();
-				log.info("Network Interface Name: " + n.getDisplayName());
+				log.info("Network Interface Display Name: '" + n.getDisplayName() + "'");
+				log.info("NIC Name: '" + n.getName() + "'");
 				while (ee.hasMoreElements()) {
 					InetAddress i = (InetAddress) ee.nextElement();
 					log.info("IPAddress for Network Interface: " + n.getDisplayName() + " : " + i.getHostAddress());
@@ -57,10 +63,23 @@ public class StartMe {
 		} catch (Exception e) {
 			log.error("Error Getting IPAddress", e);
 		}
+
 		log.info("End Of Network Interfaces");
+		log.info("Available Audio Devices:");
+		try {
+			Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
+
+			for (int cnt = 0; cnt < mixerInfo.length; cnt++) {
+				log.info("'" + mixerInfo[cnt].getName() + "'");
+			}
+		} catch (Exception e) {
+			log.error("Error getting Audio Devices");
+		}
+		log.info("End Of Audio Devices");
 		log.info("JVM Version: " + System.getProperty("java.version"));
 		printSystemProperties();
 		SimpleDevice sd = new SimpleDevice();
+		
 		// loadPlugins();
 		sd.attachShutDownHook();
 		if (bInput) {
@@ -77,6 +96,7 @@ public class StartMe {
 				log.error(e.getMessage(), e);
 			}
 		}
+
 		else {
 			while (!stop) {
 				try {
@@ -89,26 +109,25 @@ public class StartMe {
 		System.exit(0);
 	}
 
-
 	/***
 	 * List all the files in this directory and sub directories.
 	 * 
 	 * @param directoryName
 	 * @return
 	 */
-//	public static List<File> listFiles(String directoryName) {
-//		File directory = new File(directoryName);
-//		List<File> resultList = new ArrayList<File>();
-//		File[] fList = directory.listFiles();
-//		resultList.addAll(Arrays.asList(fList));
-//		for (File file : fList) {
-//			if (file.isFile()) {
-//			} else if (file.isDirectory()) {
-//				resultList.addAll(listFiles(file.getAbsolutePath()));
-//			}
-//		}
-//		return resultList;
-//	}
+	// public static List<File> listFiles(String directoryName) {
+	// File directory = new File(directoryName);
+	// List<File> resultList = new ArrayList<File>();
+	// File[] fList = directory.listFiles();
+	// resultList.addAll(Arrays.asList(fList));
+	// for (File file : fList) {
+	// if (file.isFile()) {
+	// } else if (file.isDirectory()) {
+	// resultList.addAll(listFiles(file.getAbsolutePath()));
+	// }
+	// }
+	// return resultList;
+	// }
 
 	/***
 	 * Print out the System Properties.
@@ -135,20 +154,12 @@ public class StartMe {
 	}
 
 	/***
-	 * Read the app.properties file from the current directory.
-     *
-     * If the app.properties file is not found there, it will try to load the app.properties from the classpath.
+	 * Read the app.properties file
 	 */
 	private static void getConfig() {
 		Properties pr = new Properties();
 		try {
-			File appProperties = new File("app.properties");
-            if (!appProperties.exists()) {
-                pr.load(StartMe.class.getClassLoader().getResourceAsStream("app.properties"));
-            } else {
-                pr.load(new FileInputStream("app.properties"));
-            }
-
+			pr.load(new FileInputStream("app.properties"));
 			Config.friendly_name = pr.getProperty("friendly.name");
 
 			try {
@@ -164,25 +175,40 @@ public class StartMe {
 			Config.logconsole = pr.getProperty("log.console.level");
 			Config.mplayer_path = pr.getProperty("mplayer.path");
 			Config.setSaveLocalPlayList(pr.getProperty("save.local.playlist"));
-			Config.port = Config.convertStringToInt(pr.getProperty("openhome.port"));
-			Config.mplayer_cache = Config.convertStringToInt(pr.getProperty("mplayer.cache"));
-			Config.mplayer_cache_min = Config.convertStringToInt(pr.getProperty("mplayer.cache_min"));
-			Config.playlist_max = Config.convertStringToInt(pr.getProperty("playlist.max"), 1000);
+			Config.port = Config.converStringToInt(pr.getProperty("openhome.port"));
+			Config.mplayer_cache = Config.converStringToInt(pr.getProperty("mplayer.cache"));
+			Config.mplayer_cache_min = Config.converStringToInt(pr.getProperty("mplayer.cache_min"));
+			Config.playlist_max = Config.converStringToInt(pr.getProperty("playlist.max"), 1000);
 			Config.mpd_host = pr.getProperty("mpd.host");
-			Config.mpd_port = Config.convertStringToInt(pr.getProperty("mpd.port"), 6600);
-			Config.mpd_preload_timer = Config.convertStringToInt(pr.getProperty("mpd.preload.timer"), 10);
+			Config.mpd_port = Config.converStringToInt(pr.getProperty("mpd.port"), 6600);
+			Config.mpd_preload_timer = Config.converStringToInt(pr.getProperty("mpd.preload.timer"), 10);
 			Config.player = pr.getProperty("player");
 			Config.enableAVTransport = Config.convertStringToBoolean(pr.getProperty("enableAVTransport"), true);
 			Config.enableReceiver = Config.convertStringToBoolean(pr.getProperty("enableReceiver"), true);
+			//Config.songcastNICName = NetworkUtils.getNICName(pr.getProperty("songcast.nic.name"));
+			Config.songcastSoundCardName = pr.getProperty("songcast.soundcard.name");
+			Config.songcastLatencyEnabled = Config.convertStringToBoolean(pr.getProperty("songcast.latency.enabled"),true);
+			Config.webHttpPort=pr.getProperty("web.http.port");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Used to set the Songcast Audio Device
+	 */
+	private static void setAudioDevice() {
+		Properties props = System.getProperties();
+		String name = "#" + Config.songcastSoundCardName;
+		props.setProperty("javax.sound.sampled.SourceDataLine", name);
+		log.warn("###Setting Sound Card Name: " + name);
+	}
+
 	/***
 	 * Set up our logging
 	 */
-	private static void configureLogging() {
+	private static void ConfigureLogging() {
 
 		try {
 			CustomPatternLayout pl = new CustomPatternLayout();

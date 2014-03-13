@@ -4,22 +4,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Level;
 
-/**
- * Central class to hold the configuration values of the application.
- *
- * All values are static, so that we do not need to handover this class to every method, which needs those
- * values.
- */
 public class Config {
-
+	
+	
 	public static String friendly_name = "Default Room";
 	public static List<String> playlists = new ArrayList<String>();
 	public static String debug = "None";
 	public static String mplayer_path= "/usr/bin/mplayer";
 	public static boolean save_local_playlist = false;
-	public static String version = "0.0.4-SNAPSHOT"; // try to get this from the maven build parameter
+	public static String version = "0.0.0.8";
 	public static String logfile = "mediaplayer.log";
 	public static int port = -99;
 	public static int mplayer_cache = 500;
@@ -31,11 +27,15 @@ public class Config {
 	public static int mpd_port = 6600;
 	public static String player = "mpd";
 	public static int mpd_preload_timer = 10;
-	public static boolean enableAVTransport = true;
+	public static boolean enableAVTransport =true;
 	public static boolean enableReceiver = true;
+	public static String songcastNICName = "";
+	public static String songcastSoundCardName = "";
 	
 	private static Calendar cal = Calendar.getInstance();
-
+	public static boolean songcastLatencyEnabled = false;
+	public static String webHttpPort = "8088";	
+	
 	public static String getProtocolInfo() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("http-get:*:audio/x-flac:*,");
@@ -86,41 +86,52 @@ public class Config {
 	{
 		return getLogLevel(logconsole);
 	}
-	
-	protected static Level getLogLevel(String s) {
-        return Level.toLevel(s, Level.DEBUG);
-	}
 
+    protected static Level getLogLevel(String s) {
+        return Level.toLevel(s, Level.DEBUG);
+    }
 
 	public static void setSaveLocalPlayList(String property) {
-    	save_local_playlist = Boolean.valueOf(property);
+		if(property.equalsIgnoreCase("TRUE"))
+			save_local_playlist = true;
 	}
 	
-	public static int convertStringToInt(String s) {
-		return convertStringToInt(s, -99);
-	}
-
-	public static int convertStringToInt(String s, int iDefault) {
-		try	{
+	public static int converStringToInt(String s)
+	{
+		try
+		{
 			return Integer.parseInt(s);
 		}
-		catch(Exception e) {
+		catch(Exception e)
+		{
+			
+		}
+		return -99;
+	}
 
+	public static int converStringToInt(String s, int iDefault) {
+		try
+		{
+			return Integer.parseInt(s);
+		}
+		catch(Exception e)
+		{
+			
 		}
 		return iDefault;
 	}
 	
-	public static boolean convertStringToBoolean(String s, boolean bDefault) {
-		boolean value = false;
-
-        if (s == null || s.equalsIgnoreCase("")) {
-            value = bDefault;
-        }
-		else if (s.equalsIgnoreCase("TRUE") || s.equalsIgnoreCase("YES") || s.equalsIgnoreCase("1")) {
-			value = true;
-        }
-
-		return value;
+	public static boolean convertStringToBoolean(String s, boolean bDefault)
+	{
+		if(s==null || s.equalsIgnoreCase(""))
+			return bDefault;
+		if(s.equalsIgnoreCase("TRUE"))
+			return true;
+		if(s.equalsIgnoreCase("YES"))
+			return true;
+		if(s.equalsIgnoreCase("1"))
+			return true;
+		return false;
 	}
 	
 	public static void setStartTime()

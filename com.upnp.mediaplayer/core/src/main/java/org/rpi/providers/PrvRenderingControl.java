@@ -1,8 +1,5 @@
 package org.rpi.providers;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import org.apache.log4j.Logger;
 import org.openhome.net.device.ActionError;
 import org.openhome.net.device.DvDevice;
@@ -13,6 +10,9 @@ import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventMuteChanged;
 import org.rpi.player.events.EventVolumeChanged;
 import org.rpi.utils.Utils;
+
+import java.util.Observable;
+import java.util.Observer;
 
 public class PrvRenderingControl extends DvProviderUpnpOrgRenderingControl1 implements Observer, IDisposableDevice {
 
@@ -410,7 +410,7 @@ public class PrvRenderingControl extends DvProviderUpnpOrgRenderingControl1 impl
 	}
 	private void checkValue(long value) {
 		if (value < 0 || value > 100)
-			throw new ActionError("Specified Value: " + value + " Must be &lt;= 100");		
+			throw new ActionError("Specified Value: " + value + " Must be &lt;= 100");
 	}
 
     @Override

@@ -311,6 +311,7 @@
         <module>plugin-lcddisplay</module>
         <module>plugin-lircintegration</module>
         <module>plugin-lastfm</module>
+        <module>plugin-fullscreendisplay</module>
     </modules>
 
     <properties>

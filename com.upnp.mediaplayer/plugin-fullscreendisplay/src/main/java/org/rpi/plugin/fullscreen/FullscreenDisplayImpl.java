@@ -7,11 +7,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+import org.rpi.channel.ChannelBase;
 import org.rpi.player.PlayManager;
 import org.rpi.player.events.EventBase;
 import org.rpi.player.events.EventTrackChanged;
 import org.rpi.player.events.EventUpdateTrackMetaText;
-import org.rpi.playlist.CustomTrack;
 
 import javax.swing.*;
 
@@ -69,11 +69,13 @@ public class FullscreenDisplayImpl implements FullscreenDisplayInterface, Observ
         switch (base.getType()) {
             case EVENTTRACKCHANGED:
                 EventTrackChanged etc = (EventTrackChanged) e;
-                CustomTrack track = etc.getTrack();
+                ChannelBase track = etc.getTrack();
                 if (track != null) {
                     model.setAlbumTitle(track.getAlbum());
-                    model.setArtist(track.getPerformer());
+                    model.setArtist(track.getArtist());
                     model.setTrackTitle(track.getTitle());
+                    model.setImageURI(track.getAlbumArtUri());
+                    model.setTrackDuration(track.getTime());
                 } else {
                     LOGGER.info("Track was NULL");
                 }

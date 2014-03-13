@@ -25,6 +25,10 @@ public class TrackModel {
 
     private String imageURI;
 
+    private String playingTime;
+
+    private Long trackDuration;
+
     public String getTrackTitle() {
         return trackTitle;
     }
@@ -63,5 +67,15 @@ public class TrackModel {
         String oldValue = this.imageURI;
         this.imageURI = imageURI;
         this.pcs.firePropertyChange("imageURI", oldValue, imageURI);
+    }
+
+    public Long getTrackDuration() {
+        return trackDuration;
+    }
+
+    public void setTrackDuration(Long trackDuration) {
+        Long oldValue = this.trackDuration;
+        this.trackDuration = trackDuration;
+        this.pcs.firePropertyChange("trackDuration", oldValue, trackDuration);
     }
 }

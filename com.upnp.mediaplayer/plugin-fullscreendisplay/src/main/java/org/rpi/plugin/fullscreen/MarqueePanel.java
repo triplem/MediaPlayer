@@ -42,24 +42,31 @@ public class MarqueePanel extends JPanel
      *	Convenience constructor that sets both the scroll frequency and
      *  scroll amount to a value of 5.
      */
-    public MarqueePanel()
-    {
-        this(5, 5, new JLabel());
+    public MarqueePanel() {
+        this(5, 5);
+    }
+
+    public MarqueePanel(int scrollFrequency, int scrollAmount) {
+        this(new JLabel(), scrollFrequency, scrollAmount);
+
+        // set default font
+        this.label.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 40));
+        // set default layout of label
+        this.label.setForeground(Color.YELLOW);
+        this.label.setBackground(Color.BLACK);
     }
 
     /**
      *  Create an AnimatedIcon that will continuously cycle with the
      * default (500ms).
      *
-     *  @param component  the component the icon will be painted on
-     *  @param icons	  the Icons to be painted as part of the animation
      */
-    public MarqueePanel(int scrollFrequency, int scrollAmount, JLabel label)
-    {
+    public MarqueePanel(JLabel label, int scrollFrequency, int scrollAmount) {
         setScrollFrequency( scrollFrequency );
         setScrollAmount( scrollAmount );
         setLayout( new BoxLayout(this, BoxLayout.X_AXIS) );
-        addAncestorListener( this );
+        addAncestorListener(this);
+
         this.label = label;
         this.add(label);
     }
@@ -264,7 +271,7 @@ public class MarqueePanel extends JPanel
     /**
      *  Start scrolling the components on the panel. Components will start
      *  scrolling from the right edge towards the left edge.
-     */                                                      u
+     */
     public void startScrolling()
     {
         Font font = this.label.getFont();
@@ -332,6 +339,12 @@ public class MarqueePanel extends JPanel
 
     public JLabel getLabel() {
         return this.label;
+    }
+
+    public void setText(String text) {
+        this.stopScrolling();
+        this.label.setText(text);
+        this.startScrolling();
     }
 
 //  Implement ActionListener
