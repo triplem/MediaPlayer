@@ -164,6 +164,7 @@
             <version>1.0.2</version>
         </dependency>
 
+        <!-- grizzly dependency for web server and json communication -->
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-server</artifactId>
@@ -173,6 +174,13 @@
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
             <version>2.6</version>
+        </dependency>
+
+        <!-- joda for time formating and parsing -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.3</version>
         </dependency>
 
         <dependency>

@@ -28,5 +28,7 @@ public class ChannelBaseTest {
         assertEquals("Captain Future", ct.getAlbum());
         assertEquals("Christian Bruhn", ct.getArtist());
         assertEquals("http://somehost:57645/external/audio/albums/1.jpg", ct.getAlbumArtUri());
+        assertEquals("Soundtrack", ct.getGenre());
+        assertEquals(new Long(154000), ct.getDuration());
     }
 }
