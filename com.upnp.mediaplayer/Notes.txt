@@ -278,3 +278,4 @@ To debug the app, run mvnDebug instead of mvn.
 
 Problem right now: you need to re-build the core with the correct profile to use the settings of the profile (debug, ...)
 even in the plugins.
+

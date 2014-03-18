@@ -4,31 +4,29 @@
 <title>MediaPlayer Main Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"	href="js/jquery/jquery.mobile-1.4.2.css" />
-<script src="js/jquery/jquery-1.11.0.min.js"></script>
+<script src="js/jquery/jquery-2.1.0.min.js"></script>
 <script	src="js/jquery/jquery.mobile-1.4.2.min.js"></script>
+<script src="js/MainPage.js"></script>
 <script src="js/Common.js"></script>
-
-
 </head>
 <body>
 
 
 
 
-	<div data-role="page">
-	<script src="js/MainPage.js"></script>
+	<div data-role="page" id="main">
 		<div data-role="header" data-id="header1" data-position="fixed" >
 			<a href="#leftpanel1" data-role="button" data-icon="gear"	data-inline="true" data-mini="true" class="ui-btn-right"></a> 
 			<h1 id="header">
-			<img id="image_portrait" src="./images/mediaplayer240.png" alt="chef etat" width="40" height="40" class="ui-btn-left" />
+			<img id="image_portrait" src="./images/mediaplayer240.png" alt="chef etat" width="60" height="60" class="ui-btn-left" />
 			MediaPlayer Config
 			</h1>
 			<br>
-			<div data-role="navbar">
+			<div data-role="navbar" data-position="fixed" data-id="headerNav">
 				<ul>
-					<li><a href="StatusPage.html" id="Status">Status</a></li>
-					<li><a href="MainPage.html" data-prefetch="true" data-transition="none" class="ui-btn-active ui-state-persist">Config</a></li>
-					<li><a href="AlarmPage.html" id="Alarm">Alarm</a></li>
+					<li><a href="StatusPage.html" data-transition="slide">Status</a></li>
+					<li><a href="MainPage.html"   data-transition="slide" class="ui-btn-active ui-state-persist">Config</a></li>
+					<li><a href="AlarmPage.html"  data-transition="slide" >Alarm</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -45,7 +43,7 @@
 							<option value="mplayer">MPlayer</option>
 							<option value="mpd">MPD</option>
 					</select></li>
-					<li class="ui-field-contain"><label for="playlistMax">PlayList	Maximum:</label> <input type="text" name="playlistMax" id="playlistMax" value="" data-clear-btn="true"></li>
+					<li class="ui-field-contain"><label for="playlistMax">PlayList	Maximum:</label> <input type="number" name="playlistMax" id="playlistMax" value="" data-clear-btn="true"></li>
 					
 					<li class="ui-field-contain"><label for="savePlayList">Save	PlayList Locally:</label> <select name="savePlayList" id="savePlayList"	data-role="slider">
 							<option value="false">False</option>
@@ -76,18 +74,48 @@
 					<li class="ui-field-contain"><label for="mpdPort">MPD Port:</label> <input type="text" name="mpdPort" id="mpdPort" value="" data-clear-btn="true"></li>
 					
 					<li class="ui-field-contain"><label for="logFileName">Log File Name:</label> <input type="text" name="logFileName" id="logFileName" value="" data-clear-btn="true"></li>
-
-					<li class="ui-field-contain"><label for="slider2">Slider:</label>
-						<input type="range" name="slider2" id="slider2" value="0" min="0"
-						max="100" data-highlight="true"></li>
-
+					
+					<li class="ui-field-contain"><label for="log_file_level"	class="select">Log File Level</label> 
+					<select	name="log_file_level" id="log_file_level">
+							<option value="debug">Debug</option>
+							<option value="info">Info</option>
+					</select></li>
+					
+					<li class="ui-field-contain"><label for="log_console_level"	class="select">Log Console Level</label> 
+					<select	name="log_console_level" id="log_console_level">
+							<option value="off">Off</option>
+							<option value="debug">Debug</option>
+							<option value="info">Info</option>
+					</select></li>
+					
+					<li class="ui-field-contain"><label for="log_console_level"	class="select">OpenHome Log Level</label> 
+					<select	name="log_openhome_level" id="log_openhome_level">
+							<option value="off">Off</option>
+							<option value="error">Error</option>
+							<option value="debug">Debug</option>
+							<option value="info">Info</option>
+					</select></li>
+					
+					<li class="ui-field-contain"><label for="openhome_port">OpenHome Port:</label> <input type="number" name="openhome_port" id="openhome_port" value="" data-clear-btn="true"></li>
+					
+					<li class="ui-field-contain"><label for="songcast_sound_name">Songcast SoundCard:</label> <input type="text" name="songcast_sound_name" id="songcast_sound_name" value="" data-clear-btn="true"></li>
+					
+					<li class="ui-field-contain"><label for="songcast_latency">Songcast Latency Enabled:</label> <select name="songcast_latency" id="songcast_latency"	data-role="slider">
+							<option value="false">False</option>
+							<option value="true">True</option>
+					</select></li>
+					
+					<li class="ui-field-contain"><label for="http_web_port">Http Port:</label> <input type="number" name="http_web_port" id="http_web_port" value="" data-clear-btn="true"></li>
+					
+					<li class="ui-field-contain"><label for="tunein_username">TuneIn UserName:</label> <input type="number" name="tunein_username" id="tunein_username" value="" data-clear-btn="true"></li>
+					
 					<li class="ui-body ui-body-b">
 						<fieldset class="ui-grid-a">
 							<div class="ui-block-a">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">Cancel</button>
+								<button type="button" id="mpCancel" class="ui-btn ui-corner-all ui-btn-a">Cancel</button>
 							</div>
 							<div class="ui-block-b">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">Submit</button>
+								<button type="button" id="mpSubmit" class="ui-btn ui-corner-all ui-btn-a">Submit</button>
 							</div>
 						</fieldset>
 					</li>

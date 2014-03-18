@@ -9,10 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.xeoh.plugins.base.util.uri.ClassURI;
 import org.apache.log4j.Logger;
+import org.rpi.plug.interfaces.AlarmClockInterface;
+import org.rpi.plugin.alarmclock.AlarmClockImpl;
 import org.rpi.utils.Utils;
+
 import com.pi4j.io.gpio.GpioController;
+
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.PluginManager;
 
@@ -55,13 +58,10 @@ public class OSManager {
 	// }
 
 	/**
-     * Add the library path to the ohNet.so file.
-     *
 	 * Not clever enough to work out how to override ClassLoader functionality,
 	 * so using this nice trick instead..
 	 * 
 	 * @param pathToAdd
-     *
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
@@ -87,154 +87,112 @@ public class OSManager {
 	 * Set the Path to the ohNetxx.so files
 	 */
 	private void setJavaPath() {
-        String fullPath = constructLibraryPath();
-        if (!Utils.isEmpty(fullPath)) {
-            try {
-                addLibraryPath(fullPath);
-            } catch (Exception e) {
-               log.error("Cannot add library path", e);
-            }
-        }
+		try {
+			String class_name = this.getClass().getName();
+			log.debug("Find Class, ClassName: " + class_name);
+			String path = getFilePath(this.getClass(), true);
+			if (path.endsWith("/")) {
+				path = path.substring(0, (path.length() - 1));
+				log.debug("Path ended with '/'. Updated Path to be: " + path);
+			} else {
+				log.debug("Path did not end with '/': " + path);
+			}
+			String full_path = path + OHNET_LIB_DIR + "/default";
+			log.debug("Path of this File is: " + path);
+			String os = System.getProperty("os.name").toUpperCase();
+			log.debug("OS Name: " + os);
+			if (os.startsWith("WINDOWS")) {
+				log.debug("Windows OS");
+				String osPathName = "windows";
+				String osArch = System.getProperty("os.arch");
+
+				String architecture = "x86";
+				if (osArch.endsWith("64")) {
+					architecture = "x64";
+				}
+
+				full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/" + architecture;
+			} else if (os.startsWith("LINUX")) {
+				String osPathName = "linux";
+
+				String arch = System.getProperty("os.arch").toUpperCase();
+				if (arch.startsWith("ARM")) {
+					String osArch = "arm";
+
+					log.debug("Its an ARM device, now check, which revision");
+					try {
+						String armVersion = getReadElfTag("Tag_CPU_arch");
+
+						if (armVersion == null) {
+							log.error("Cannot determine ARM version...");
+							osArch = "UNKNOWN";
+						} else if (armVersion.equals("v5")) {
+							osArch = osArch + "v5sf";
+						} else if (armVersion.equals("v6")) {
+							// we believe that a v6 arm is always a raspi (could
+							// be a pogoplug...)
+							log.debug("We think this is a Raspi");
+							setRaspi(true);
+							if (isHardFloat()) {
+								osArch = osArch + "v6hf";
+							} else {
+								osArch = osArch + "v6sf";
+							}
+						} else if (armVersion.equals("v7")) {
+							osArch = osArch + "v7";
+						} else {
+							log.error("Unknown ARM version...(" + armVersion + ")");
+							osArch = "UNKNOWN";
+						}
+
+						if (!osArch.equals("UNKNOWN")) {
+							full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/" + osArch;
+						}
+					} catch (Exception e) {
+						log.debug("Error Determining ARM OS Type: ", e);
+					}
+				} else if (arch.startsWith("I386")) {
+					String version = System.getProperty("os.version");
+					log.debug("OS is Linux, and arch is  " + arch + ". Version is: " + version);
+					full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/x86";
+				} else if (arch.startsWith("AMD64")) {
+					String version = System.getProperty("os.version");
+					log.debug("OS is Linux, and arch is " + arch + ". Version is: " + version);
+					full_path = path + OHNET_LIB_DIR + "/" + osPathName + "/amd64";
+				}
+			}
+
+			log.warn("Using full_path " + full_path);
+			addLibraryPath(full_path);
+
+		} catch (Exception e) {
+			log.error(e);
+		}
+
 	}
 
-    /**
-     * Constructs the additional library path.
-     *
-     * public to avoid problems for unit tests.
-     *
-     * @return
-     */
-    public String constructLibraryPath() {
-        String fullPath = null;
-
-        String class_name = this.getClass().getName();
-        log.debug("Find Class, ClassName: " + class_name);
-        String path = getFilePath(this.getClass(), true);
-
-        if (path.endsWith("/")) {
-            path = path.substring(0, (path.length() - 1));
-            log.debug("Path ended with '/'. Updated Path to be: " + path);
-        } else {
-            log.debug("Path did not end with '/': " + path);
-        }
-
-        fullPath = path + getOhnetLibDir();
-
-        log.warn("Using fullPath " + fullPath);
-
-        return fullPath;
-    }
-
-    /**
-     * retrieves the path suffix for the ohNet.so files (suffix in this case means all path elements inclusive
-     * /mediaplayer_lib).
-     *
-     * E.g. you will receive mediaplayer_lib/ohNet/linux/amd64, if you are running on an amd64 system.
-     *
-     * The default is OHNET_LIB_DIR + "/default". If your system is not recognized, you are still able to copy your
-     * applicable libs to this directory and use the mediaplayer.
-     *
-     * @return
-     */
-    public String getOhnetLibDir() {
-
-        String path_suffix = OHNET_LIB_DIR + "/default";
-        log.debug("Path of this File is: " + path_suffix);
-
-        String os = System.getProperty("os.name").toUpperCase();
-        log.debug("OS Name: " + os);
-
-        if (os.startsWith("WINDOWS")) {
-            log.debug("Windows OS");
-            String osPathName = "windows";
-            String osArch = System.getProperty("os.arch");
-
-            String architecture = "x86";
-            if (osArch.endsWith("64")) {
-                architecture = "x64";
-            }
-
-            path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/" + architecture;
-        } else if (os.startsWith("LINUX")) {
-            String osPathName = "linux";
-
-            String arch = System.getProperty("os.arch").toUpperCase();
-            if (arch.startsWith("ARM")) {
-                String osArch = "arm";
-
-                log.debug("Its an ARM device, now check, which revision");
-                try {
-                    String armVersion = getReadElfTag("Tag_CPU_arch");
-
-                    if (armVersion == null) {
-                        log.error("Cannot determine ARM version...");
-                        osArch = "UNKNOWN";
-                    } else if (armVersion.equals("v5")) {
-                        osArch = osArch + "v5sf";
-                    } else if (armVersion.equals("v6")) {
-                        // we believe that a v6 arm is always a raspi (could
-                        // be a pogoplug...)
-                        log.debug("We think this is a Raspi");
-                        setRaspi(true);
-                        if (isHardFloat()) {
-                            osArch = osArch + "v6hf";
-                        } else {
-                            osArch = osArch + "v6sf";
-                        }
-                    } else if (armVersion.equals("v7")) {
-                        osArch = osArch + "v7";
-                    } else {
-                        log.error("Unknown ARM version...(" + armVersion + ")");
-                        osArch = "UNKNOWN";
-                    }
-
-                    if (!osArch.equals("UNKNOWN"))  {
-                        path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/" + osArch;
-                    }
-                } catch (Exception e) {
-                    log.debug("Error Determining ARM OS Type: ", e);
-                }
-            } else if (arch.startsWith("I386")) {
-                String version = System.getProperty("os.version");
-                log.debug("OS is Linux, and arch is  " + arch + ". Version is: " + version);
-                path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/x86";
-            } else if (arch.startsWith("AMD64")) {
-                String version = System.getProperty("os.version");
-                log.debug("OS is Linux, and arch is " + arch + ". Version is: " + version);
-                path_suffix = OHNET_LIB_DIR + "/" + osPathName + "/amd64";
-            }
-        }
-
-        return path_suffix;
-    }
-
 	/***
-	 * Get the Path of this ClassFile and/or the path of the current JAR, which should be basically the same! No?
-	 * Returned to the old method because the new method did not work when a plugin requested the path.
-	 * Getting LCD.xml from Directory: /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin
-	 * Instead of
-	 * /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin/org/rpi/plugin/lcddisplay/
-     *
-     * For unit testing or for other special circumstances a system property "mediaplayer.core.home"
-     * variable is used. If this variable is set, the value of this variable is returned instead of the
-     * path of the current class.
-     *
+	 * Get the Path of this ClassFile and/or the path of the current JAR, which
+	 * should be basically the same! No? Returned to the old method because the
+	 * new method did not work when a plugin requested the path. Getting LCD.xml
+	 * from Directory:
+	 * /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin Instead of
+	 * /C:/Keep/git/repository/MediaPlayer/com.upnp.mediaplayer/bin/org/rpi/
+	 * plugin/lcddisplay/
+	 * 
 	 * @return
 	 */
-//	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
-//        String path = mClass.getProtectionDomain().getCodeSource().getLocation().getPath();
-//        String retValue = path.substring(0, path.lastIndexOf("/"));
-//        log.debug("Returning Path of Class: " + mClass.getName() + " " + retValue);
-//        return retValue;
-//	}
-	
-	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
-        // read core.home environment variable
-        String home = (String)System.getProperties().get("mediaplayer.core.home");
-        if (!Utils.isEmpty(home)) {
-            return home;
-        }
+	// public synchronized String getFilePath(Class mClass, boolean
+	// bUseFullNamePath) {
+	// String path =
+	// mClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+	// String retValue = path.substring(0, path.lastIndexOf("/"));
+	// log.debug("Returning Path of Class: " + mClass.getName() + " " +
+	// retValue);
+	// return retValue;
+	// }
 
+	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
 		String className = mClass.getName();
 		if (!className.startsWith("/")) {
 			className = "/" + className;
@@ -291,10 +249,8 @@ public class OSManager {
 			log.info("Start of LoadPlugins");
 			pm = PluginManagerFactory.createPluginManager();
 			List<File> files = listFiles("plugins");
-			if (files == null || files.isEmpty()) {
-                pm.addPluginsFrom(ClassURI.CLASSPATH);
-                return;
-            }
+			if (files == null)
+				return;
 			for (File file : files) {
 				try {
 					if (file.getName().toUpperCase().endsWith(".JAR")) {
@@ -305,10 +261,24 @@ public class OSManager {
 					log.error("Unable to load Plugins", e);
 				}
 			}
-			log.info("End of LoadPlugins");
+			log.info("End of LoadPlugnis");
 		} catch (Exception e) {
 			log.error("Error Loading Plugins");
 		}
+	}
+
+	/**
+	 * Test to see what happens if we don't have the Plugin loaded
+	 * 
+	 * @return
+	 */
+	public AlarmClockInterface getPlugin() {
+		try {
+			return pm.getPlugin(AlarmClockInterface.class);
+		} catch (Exception e) {
+			log.error("Could not get AlarmClock Plugin");
+		}
+		return null;
 	}
 
 	/***
@@ -346,7 +316,7 @@ public class OSManager {
 		this.bRaspi = bRaspi;
 	}
 
-    /**
+	/**
 	 * Is this a SoftFloat Raspberry Pi
 	 * 
 	 * @return
@@ -379,108 +349,106 @@ public class OSManager {
 		return Pi4JManager.getInstance().getGpio();
 	}
 
-// the following is taken fully from pi4j (https://github.com/Pi4J/pi4j/blob/master/pi4j-core/src/main/java/com/pi4j/system/SystemInfo.java)
-// we should get rid of this dependency, but right now it does work nicely
+	// the following is taken fully from pi4j
+	// (https://github.com/Pi4J/pi4j/blob/master/pi4j-core/src/main/java/com/pi4j/system/SystemInfo.java)
+	// we should get rid of this dependency, but right now it does work nicely
 
-    /*
-     * this method was partially derived from :: (project) jogamp / (developer) sgothel
-     * https://github.com/sgothel/gluegen/blob/master/src/java/jogamp/common/os/PlatformPropsImpl.java#L160
-     * https://github.com/sgothel/gluegen/blob/master/LICENSE.txt
-     *
-     */
-    public  boolean isHardFloat() {
+	/*
+	 * this method was partially derived from :: (project) jogamp / (developer)
+	 * sgothel
+	 * https://github.com/sgothel/gluegen/blob/master/src/java/jogamp/common
+	 * /os/PlatformPropsImpl.java#L160
+	 * https://github.com/sgothel/gluegen/blob/master/LICENSE.txt
+	 */
+	public boolean isHardFloat() {
 
-        return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-            ArrayList<String> gnueabihf = new ArrayList<String>();
-           public Boolean run() {
-           	gnueabihf.add("gnueabihf");
-           	gnueabihf.add("armhf");
-               if (Utils.containsString(System.getProperty("sun.boot.library.path"), gnueabihf) ||
-               		Utils.containsString(System.getProperty("java.library.path"), gnueabihf) ||
-               		Utils.containsString(System.getProperty("java.home"), gnueabihf) ||
-                       getBashVersionInfo().contains("gnueabihf") ||
-                       hasReadElfTag("Tag_ABI_HardFP_use")) {
-            	   log.debug("This is a HardFloat");
-                   return true; //
-               }
-               log.debug("This is a HardFloat");
-               return false;
-           }
-       });
-    }
-    
+		return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			ArrayList<String> gnueabihf = new ArrayList<String>();
 
+			public Boolean run() {
+				gnueabihf.add("gnueabihf");
+				gnueabihf.add("armhf");
+				if (Utils.containsString(System.getProperty("sun.boot.library.path"), gnueabihf) || Utils.containsString(System.getProperty("java.library.path"), gnueabihf) || Utils.containsString(System.getProperty("java.home"), gnueabihf) || getBashVersionInfo().contains("gnueabihf") || hasReadElfTag("Tag_ABI_HardFP_use")) {
+					log.debug("This is a HardFloat");
+					return true; //
+				}
+				log.debug("This is a HardFloat");
+				return false;
+			}
+		});
+	}
 
-    /*
-     * taken from https://github.com/Pi4J/pi4j/blob/master/pi4j-core/src/main/java/com/pi4j/system/SystemInfo.java
-     *
-     * this method will to obtain the version info string from the 'bash' program
-     * (this method is used to help determine the HARD-FLOAT / SOFT-FLOAT ABI of the system)
-     */
-    private static String getBashVersionInfo() {
-        String versionInfo = "";
-        try {
-            String result[] = Utils.execute("bash --version");
-            for(String line : result) {
-                if(!line.isEmpty()) {
-                    versionInfo = line; // return only first output line of version info
-                    break;
-                }
-            }
-        }
-        catch(Exception e)
-        {
-        	log.error("Error Executing bash --version", e);
-        }
-        //catch (IOException ioe) { ioe.printStackTrace(); }
-        //catch (InterruptedException ie) { ie.printStackTrace(); }
-        return versionInfo;
-    }
+	/*
+	 * taken from
+	 * https://github.com/Pi4J/pi4j/blob/master/pi4j-core/src/main/java
+	 * /com/pi4j/system/SystemInfo.java
+	 * 
+	 * this method will to obtain the version info string from the 'bash'
+	 * program (this method is used to help determine the HARD-FLOAT /
+	 * SOFT-FLOAT ABI of the system)
+	 */
+	private static String getBashVersionInfo() {
+		String versionInfo = "";
+		try {
+			String result[] = Utils.execute("bash --version");
+			for (String line : result) {
+				if (!line.isEmpty()) {
+					versionInfo = line; // return only first output line of
+										// version info
+					break;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error Executing bash --version", e);
+		}
+		// catch (IOException ioe) { ioe.printStackTrace(); }
+		// catch (InterruptedException ie) { ie.printStackTrace(); }
+		return versionInfo;
+	}
 
-    /*
-     * this method will determine if a specified tag exists from the elf info in the '/proc/self/exe' program
-     * (this method is used to help determine the HARD-FLOAT / SOFT-FLOAT ABI of the system)
-     */
-    private static boolean hasReadElfTag(String tag) {
-        String tagValue = getReadElfTag(tag);
-        if(tagValue != null && !tagValue.isEmpty())
-            return true;
-        return false;
-    }
+	/*
+	 * this method will determine if a specified tag exists from the elf info in
+	 * the '/proc/self/exe' program (this method is used to help determine the
+	 * HARD-FLOAT / SOFT-FLOAT ABI of the system)
+	 */
+	private static boolean hasReadElfTag(String tag) {
+		String tagValue = getReadElfTag(tag);
+		if (tagValue != null && !tagValue.isEmpty())
+			return true;
+		return false;
+	}
 
-    /*
-     * this method will obtain a specified tag value from the elf info in the '/proc/self/exe' program
-     * (this method is used to help determine the HARD-FLOAT / SOFT-FLOAT ABI of the system)
-     */
-    private static String getReadElfTag(String tag) {
-        String tagValue = null;
-        try {
-            String result[] = Utils.execute("/usr/bin/readelf -A /proc/self/exe");
-            if(result != null){
-                for(String line : result) {
-                    line = line.trim();
-                    if (line.startsWith(tag) && line.contains(":")) {
-                        String lineParts[] = line.split(":", 2);
-                        if(lineParts.length > 1)
-                            tagValue = lineParts[1].trim();
-                        break;
-                    }
-                }
-            }
-        }
-        catch(Exception e)
-        {
-        	log.error("IOException during readelf operation", e);
-        }
-        //catch (IOException ioe) {
-        //    log.error("IOException during readelf operation", ioe);
-        //}
-        //catch (InterruptedException ie) {
-        //    log.error("InterruptedEx during readelf operation", ie);
+	/*
+	 * this method will obtain a specified tag value from the elf info in the
+	 * '/proc/self/exe' program (this method is used to help determine the
+	 * HARD-FLOAT / SOFT-FLOAT ABI of the system)
+	 */
+	private static String getReadElfTag(String tag) {
+		String tagValue = null;
+		try {
+			String result[] = Utils.execute("/usr/bin/readelf -A /proc/self/exe");
+			if (result != null) {
+				for (String line : result) {
+					line = line.trim();
+					if (line.startsWith(tag) && line.contains(":")) {
+						String lineParts[] = line.split(":", 2);
+						if (lineParts.length > 1)
+							tagValue = lineParts[1].trim();
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.error("IOException during readelf operation", e);
+		}
+		// catch (IOException ioe) {
+		// log.error("IOException during readelf operation", ioe);
+		// }
+		// catch (InterruptedException ie) {
+		// log.error("InterruptedEx during readelf operation", ie);
 
-        //}
-        return tagValue;
-    }
-
+		// }
+		return tagValue;
+	}
 
 }
