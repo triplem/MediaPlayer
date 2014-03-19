@@ -320,6 +320,7 @@
 
         <maven-wagon.version>2.6</maven-wagon.version>
         <junit.version>4.11</junit.version>
+        <quartz.version>2.1.1</quartz.version>
 
         <github.global.server>github</github.global.server>
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.rpi.plug.interfaces.AlarmClockInterface;
-import org.rpi.plugin.alarmclock.AlarmClockImpl;
 import org.rpi.utils.Utils;
 
 import com.pi4j.io.gpio.GpioController;
