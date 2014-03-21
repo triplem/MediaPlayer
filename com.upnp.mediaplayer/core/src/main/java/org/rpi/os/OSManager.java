@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.xeoh.plugins.base.util.uri.ClassURI;
 import org.apache.log4j.Logger;
 import org.rpi.plug.interfaces.AlarmClockInterface;
 import org.rpi.utils.Utils;
@@ -193,6 +194,11 @@ public class OSManager {
 
 	public synchronized String getFilePath(Class mClass, boolean bUseFullNamePath) {
 		String className = mClass.getName();
+        String home = (String)System.getProperties().get("mediaplayer.core.home");
+        if (!Utils.isEmpty(home)) {
+            return home;
+        }
+
 		if (!className.startsWith("/")) {
 			className = "/" + className;
 		}
@@ -248,8 +254,10 @@ public class OSManager {
 			log.info("Start of LoadPlugins");
 			pm = PluginManagerFactory.createPluginManager();
 			List<File> files = listFiles("plugins");
-			if (files == null)
-				return;
+			if (files == null || files.isEmpty()) {
+                pm.addPluginsFrom(ClassURI.CLASSPATH);
+                return;
+            }
 			for (File file : files) {
 				try {
 					if (file.getName().toUpperCase().endsWith(".JAR")) {
