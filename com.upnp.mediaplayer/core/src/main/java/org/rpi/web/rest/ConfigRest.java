@@ -80,7 +80,6 @@ public class ConfigRest {
 
     private String converValues(String value) {
         try {
-            //value = value.replace('\\', '/');
             value = URLEncoder.encode(value, "UTF-8");
         } catch (Exception e) {
             log.error("Error creating Encoding JSON",e);
@@ -134,6 +133,8 @@ public class ConfigRest {
 	        reader.close();
 	        log.debug("Name: " + configObject.getString("friendly_name"));
 	        Config.friendly_name = configObject.getString("friendly_name");
+	        log.debug("ConsoleLogLevel: " + configObject.getString("log_console_level"));
+	        
 	        
 
 		} catch (Exception e) {
@@ -142,12 +143,31 @@ public class ConfigRest {
 		return Response.status(200).entity("HELLO").build();
 	}
 	
+	private String getStringValue(JsonObject configObject, String key )
+	{
+		if(configObject.containsKey(key))
+		{
+			return configObject.getString(key);
+		}
+		return null;
+	}
+	
+	private Boolean getBooleanValue(JsonObject configObject, String key )
+	{
+		if(configObject.containsKey(key))
+		{
+			return configObject.getBoolean(key);
+		}
+		return null;
+	}
+	
 	
 	@Path("setSleepTimer")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String setSleepTimer(@QueryParam("value") String value)
 	{
+		log.debug("Setting SleepTimer: " + value);
 		StringBuilder sb = new StringBuilder();
 		try {
 			sb.append(PluginGateWay.getInstance().setSleepTimer(value));
