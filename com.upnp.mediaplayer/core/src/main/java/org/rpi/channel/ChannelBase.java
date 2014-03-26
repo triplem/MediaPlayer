@@ -24,14 +24,14 @@ import org.xml.sax.InputSource;
 public class ChannelBase {
 	private Logger log = Logger.getLogger(this.getClass());
 	
-    private static final String ENTRY_START = "<Entry>";
-    private static final String ENTRY_END = "</Entry>";
-    private static final String ID_START = "<Id>";
-    private static final String ID_END = "</Id>";
-    private static final String URI_START = "<Uri>";
-    private static final String URI_END = "</Uri>";
-    private static final String META_START = "<Metadata>";
-    private static final String META_END = "</Metadata>";
+    protected static final String ENTRY_START = "<Entry>";
+    protected static final String ENTRY_END = "</Entry>";
+    protected static final String ID_START = "<Id>";
+    protected static final String ID_END = "</Id>";
+    protected static final String URI_START = "<Uri>";
+    protected static final String URI_END = "</Uri>";
+    protected static final String META_START = "<Metadata>";
+    protected static final String META_END = "</Metadata>";
 
     private static final String personSeparator = ",";
 
@@ -279,7 +279,7 @@ public class ChannelBase {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource insrc = new InputSource(new StringReader(metadata));
+            InputSource insrc = new InputSource(new StringReader(metadata.trim()));
             return builder.parse(insrc);
         } catch (Exception e) {
 
@@ -313,7 +313,7 @@ public class ChannelBase {
 
     public void getTrackDetails() {
         try {
-            Document doc = getDocument();
+            Document doc = getDocument();//
             Node node = doc.getFirstChild();
             Node item = node.getFirstChild();
             NodeList childs = item.getChildNodes();
